@@ -1,70 +1,93 @@
 .register-page main
-    min-height: calc( 100vh - 72px )
+  min-height: calc(100vh - 72px)
+  display: flex
+  flex-direction: row
+
+.register-img
+  width: 50%
+  padding: 40px
+
+  img
+    width: 100%
+    height: auto
 
 .register 
+  width: 50%
+  display: flex
+  justify-content: center
+  align-content: center
+  font-family: var(--font-inter)
+  height: calc(100vh - 72px)
+
+  &__header
+    margin-bottom: 25px
+
+  &__inner
     display: flex
-    justify-content: center
-    align-content: center
-    font-family: var(--font-inter)
+    background-color: #222327
+    width: 100%
+    overflow: hidden
+    height: 100%
 
-    &__header
-        margin-bottom: 25px
+  &__button button
+    width: 100%
+    padding: 8px 0
+    background-color: #4662e3
+    font-weight: 500
+    text-transform: uppercase
+    border-radius: 2px
+    border: none
+    color: #fff
+    cursor: pointer
+    transition: background-color 0.3s ease
+    margin-top: 10px
 
-    &__inner
+    &:hover
+      background-color: #364fc7
+
+  &__section
+    width: 100%
+    padding: 25px
+
+    &--form
+      text-align: center
+
+  &__form
+    display: flex
+    flex-direction: column
+    gap: 15px
+
+    &-row
+      display: flex
+      align-items: center
+      justify-content: flex-start
+      gap: 30px
+
+    &-item
+      display: flex
+      flex-direction: column
+      gap: 10px
+      flex: 1 1 0%
+
+      &--row
+        flex-direction: row
         display: flex
-        background-color: #222327
-        width: 700px
-        border-radius: 10px
-        overflow: hidden
+        align-items: center
+        gap: 10px
 
-    &__button button
-        width: 100%
-        padding: 8px 0
-        background-color: #4662e3
-        font-weight: 500
-        text-transform: uppercase
+      input
+        padding: 10px
+        outline: none
+        border: solid 1px #393939
         border-radius: 2px
+        background-color: #292b2f
+        color: #fff
+        transition: border-color 0.3s ease
 
-    &__section
-        width: 50%
-        padding: 25px
+        &:focus
+          border-color: #4662e3
 
-        &--form
-            text-align: center
-
-        &--content
-            background: #3e5ee7
-            background: -webkit-linear-gradient(to bottom right, #7d51fe, #3e5ee7)
-            background: linear-gradient(to bottom right, #7d51fe, #3e5ee7)
-            background-repeat: no-repeat
-            background-size: cover
-            background-position: 00
-            color: #fff
-            position: relative
-            display: flex
-            flex-direction: column
-            align-items: center
-            justify-content: center
-            gap: 20px
-            text-align: center
-
-            &__button button
-                background-color: #8051ff
-                padding: 8px 15px
-                border-radius: 3px
-
-    &__form
-        display: flex
-        flex-direction: column
-        gap: 15px
-
-        input
-            padding: 10px
-            outline: none
-            border: solid 1px #393939
-            border-radius: 2px
-
-        span
-            text-align: left
-            color: #fff
-            font-weight: 400
+      label
+        text-align: left
+        color: #fff
+        font-weight: 600
