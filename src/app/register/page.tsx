@@ -1,83 +1,130 @@
-import React from 'react';
-import { NavbarLogin } from '@/components/navbar/index';
-import { signUp } from '@/server/users';
-import Link from 'next/link';
-import './register.sass'
+"use client";
 
-export default async function Register() {
+import React, { useState, useEffect } from "react";
+import { NavbarLogin } from "@/components/navbar/index";
+import { signUp } from "@/server/users";
+import { authClient } from "@/utils/auth-client";
+import "./register.sass";
+
+export default function Register() {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+    name: "",
+  });
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://accounts.google.com/gsi/client";
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+
+    const result = await signUp({
+      email: formData.email,
+      password: formData.password,
+      name: formData.name,
+    });
+
+    if (!result.success) {
+      alert(result.message);
+    }
+  };
+  const handleGoogleLogin = async () => {
+    const data = await authClient.signIn.social({
+        provider: "google"
+    })
+  }
+  
   return (
-    <div className='register-page'>
+    <div className="register-page">
       <NavbarLogin />
-      <main className='d-flex ai-center jc-center flex-row'>
-        <div className="register-img">
-          <img src="/register.svg" alt="secure registration" />
-        </div>
+      <main className="d-flex ai-center jc-center flex-row">
         <section className="register">
           <div className="register__inner">
             <div className="register__section register__section--form">
               <header className="register__header">
                 <h1>Create Account</h1>
               </header>
-              <form className="register__form" onSubmit={signUp}>
+              <form className="register__form" onSubmit={handleSubmit}>
                 <div className="register__form-row">
                   <div className="register__form-item">
-                    <label htmlFor="firstName">First Name:</label>
-                    <input type="text" id="firstName" name="firstName" required />
-                  </div>
-                  <div className="register__form-item">
-                    <label htmlFor="lastName">Last Name:</label>
-                    <input type="text" id="lastName" name="lastName" required />
-                  </div>
-                </div>
-                <div className="register__form-row">
-                  <div className="register__form-item">
-                    <label>Select Gender:</label>
-                    <div className="register__form-row">
-                      <div className="register__form-item--row">
-                        <input id='gender-male' name="gender" type="radio" value='Male' required />
-                        <label htmlFor='gender-male'>Male</label>
-                      </div>
-                      <div className="register__form-item--row">
-                        <input id='gender-female' name="gender" type="radio" value='Female' required />
-                        <label htmlFor='gender-female'>Female</label>
-                      </div>
-                      <div className="register__form-item--row">
-                        <input id='gender-pns' name="gender" type="radio" value='pns' required />
-                        <label htmlFor='gender-pns'>Prefer not to say</label>
-                      </div>
-                    </div>
+                    <label htmlFor="name">Full Name:</label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      required
+                    />
                   </div>
                 </div>
                 <div className="register__form-row">
                   <div className="register__form-item">
                     <label htmlFor="email">Email Address:</label>
-                    <input type="email" id="email" name="email" required />
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                    />
                   </div>
                 </div>
                 <div className="register__form-row">
                   <div className="register__form-item">
                     <label htmlFor="password">Password:</label>
-                    <input type="password" name="password" id="password" required />
+                    <input
+                      type="password"
+                      name="password"
+                      id="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      required
+                    />
                   </div>
                   <div className="register__form-item">
-                    <label htmlFor="password-confirm">Confirm Password:</label>
-                    <input type="password" name="password-confirm" id="password-confirm" required />
-                  </div>
-                </div>
-                <div className="register__form-row">
-                  <div className="register__form-item">
-                    <label htmlFor="phoneNumber">Phone Number:</label>
-                    <input type="tel" id="phoneNumber" name="phoneNumber" required />
-                  </div>
-                  <div className="register__form-item">
-                    <label htmlFor="birthDate">Birth Date:</label>
-                    <input type="date" id="birthDate" name="birthDate" required />
+                    <label htmlFor="confirmPassword">Confirm Password:</label>
+                    <input
+                      type="password"
+                      name="confirmPassword"
+                      id="confirmPassword"
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      required
+                    />
                   </div>
                 </div>
                 <div className="register__button">
-                  <button type="submit">Submit</button>
+                  <button type="submit">Sign Up</button>
+                </div>
+                <div className="d-flex ac-center jc-center">
+                  <span>OR</span>
                 </div>
               </form>
+              <div className="register__button">
+                <button type="button" onClick={handleGoogleLogin}>
+                  Sign in with Google
+                </button>
+              </div>
             </div>
           </div>
         </section>

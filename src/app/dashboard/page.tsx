@@ -1,28 +1,47 @@
 import React from 'react';
 import Head from 'next/head';
-import { NavbarDashboard } from '@/components/navbar/index'
-import { SidebarDashboard } from '@/components/sidebar/index'
+import { redirect } from 'next/navigation'; // Import redirect
+import { NavbarDashboard } from '@/components/navbar/index';
+import { SidebarDashboard } from '@/components/sidebar/index';
 import { auth } from '@/utils/auth';
 import { headers } from 'next/headers';
-import './dashboard.sass'
+import { db } from '@/db/drizzle';
+import { eq } from 'drizzle-orm';
+import { schema } from '@/db/schema';
+import './dashboard.sass';
 
 export default async function DashboardPage() {
     const session = await auth.api.getSession({
         headers: await headers(),
-      });
+    });
 
-  return (
-    <>
-      <Head>
-        <title>Dashboard</title>
-      </Head>
-      <NavbarDashboard />
-      <main className="main db">
-      <SidebarDashboard user={session?.user}/>
-        <div className="dashboard">
-            
-        </div>
-      </main>
-    </>
-  );
+    if (!session?.user?.id) {
+        redirect('/login'); // Redirect to login if no user session
+    }
+
+    // Fetch user data from Drizzle
+    const user = await db
+        .select()
+        .from(schema.user)
+        .where(eq(schema.user.id, session.user.id))
+        .then((res) => res[0]);
+
+    if (!user?.onboardingComplete) {
+        redirect('/dashboard/onboarding'); // Redirect to onboarding if not complete
+    }
+
+    return (
+        <>
+            <Head>
+                <title>Dashboard</title>
+            </Head>
+            <NavbarDashboard />
+            <main className="main db">
+                <SidebarDashboard user={session?.user} />
+                <div className="dashboard">
+                    Welcome to your dashboard!
+                </div>
+            </main>
+        </>
+    );
 }

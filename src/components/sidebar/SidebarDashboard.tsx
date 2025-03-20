@@ -22,7 +22,7 @@ interface SidebarProps {
 
 function Sidebar({ user }: SidebarProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const router = useRouter(); // Fix: Initialize router
+  const router = useRouter(); 
 
   useEffect(() => {
     setSidebarCollapsed(window.innerWidth <= 1109);
