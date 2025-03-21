@@ -1,0 +1,109 @@
+main
+    width: 100%
+    height: 100vh
+    background: linear-gradient(to right, #3a5fe6, #8051ff)
+    display: flex
+    align-items: center
+    justify-content: center
+    flex-direction: column
+
+.onboarding
+    position: relative
+    margin: 25px
+    top: -20px
+
+    &__inner
+        display: flex
+        gap: 25px
+        text-align: center
+        flex-direction: column
+        align-items: center
+        max-width: 800px
+
+    &__header
+        font-family: var(--font-montserrat)
+        font-size: clamp(18px, 4vw, 34px)
+
+    &__description
+        font-family: var(--font-poppins)
+        font-size: clamp(18px, 2.8vw, 24px)
+
+    &__button
+        button
+            font-family: var(--font-poppins)
+            font-weight: 500
+            background-color: #8051ff
+            border: none
+            border-radius: 3px
+            padding: 12px 35px
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1)
+            cursor: pointer
+            transition: box-shadow 0.2s ease, transform 0.1s ease
+
+            &:hover
+                box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15)
+                transform: translateY(-2px)
+
+    &__nav
+        display: flex
+        align-items: center
+        justify-content: center
+        gap: 40px
+        color: white
+        font-weight: 600
+        font-family: var(--font-poppins)
+        font-size: 20px
+
+        button
+            background: #00000011
+            padding: 5px 15px
+            border-radius: 5px
+            display: flex
+            align-items: center
+            gap: 8px
+            font-size: 18px
+
+            i
+                font-size: 20px
+
+    &__input
+        position: relative
+        width: 100%
+        max-width: 400px
+
+        input
+            padding: 12px 30px
+            outline: none
+            width: 100%
+            border: solid 1px #ffffff00
+            border-radius: 3px
+            background-color: #292b2f2a
+            color: #fff
+            font-size: 16px
+            transition: all 0.3s ease-in-out
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15)
+            -webkit-backdrop-filter: blur(10px)
+
+            &::placeholder
+                color: #e7e7e7
+
+            &:focus
+                border: solid 1px #ffffff7c
+
+    &__availability
+        margin-top: 15px
+        font-size: 18px
+        display: flex
+        align-items: center
+        gap: 8px
+        font-weight: 800
+        font-family: var(--font-poppins)
+
+        i
+            font-size: 16px
+
+        &.available
+            color: #4ff08d 
+
+        &.taken
+            color: #ff0000 

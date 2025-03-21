@@ -16,10 +16,9 @@ export default async function DashboardPage() {
     });
 
     if (!session?.user?.id) {
-        redirect('/login'); // Redirect to login if no user session
+        redirect('/login'); 
     }
 
-    // Fetch user data from Drizzle
     const user = await db
         .select()
         .from(schema.user)
@@ -27,7 +26,7 @@ export default async function DashboardPage() {
         .then((res) => res[0]);
 
     if (!user?.onboardingComplete) {
-        redirect('/dashboard/onboarding'); // Redirect to onboarding if not complete
+        redirect('/dashboard/onboarding');
     }
 
     return (
