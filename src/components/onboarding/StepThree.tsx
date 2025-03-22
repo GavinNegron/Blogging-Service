@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { motion } from "framer-motion"
 
 interface StepProps {
@@ -6,21 +6,11 @@ interface StepProps {
   prev: () => void
 }
 
-const takenUsernames = ["admin", "user123", "testblog", "john_doe"] 
-
 export default function StepThree({ next, prev }: StepProps) {
-  const [username, setUsername] = useState("")
-  const [isAvailable, setIsAvailable] = useState<boolean | null>(null)
+  const [domainOption, setDomainOption] = useState<"subdomain" | "custom">("subdomain")
+  const [customDomain, setCustomDomain] = useState("")
 
-  useEffect(() => {
-    if (username.length >= 3) {
-      setIsAvailable(!takenUsernames.includes(username.toLowerCase()))
-    } else {
-      setIsAvailable(null)
-    }
-  }, [username])
-
-  const isValid = username.length >= 3 && isAvailable === true
+  const isValid = domainOption === "subdomain" || (domainOption === "custom" && customDomain.length > 0)
 
   return (
     <div className="onboarding">
@@ -36,7 +26,7 @@ export default function StepThree({ next, prev }: StepProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <h1>Your Blogging Journey Starts Here</h1>
+          <h1>Select Your Blog URL</h1>
         </motion.div>
 
         <motion.div
@@ -45,32 +35,43 @@ export default function StepThree({ next, prev }: StepProps) {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
         >
-          <span>Choose a unique name for your blog. You can always change it later!</span>
+          <span>Choose how you want your blog URL to be structured.</span>
         </motion.div>
 
         <motion.div
-          className="onboarding__input"
+          className="onboarding__domain-options"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.4 }}
         >
-          <input
-            type="text"
-            name="username"
-            id="username"
-            placeholder="Select Username"
-            value={username}
-            onChange={e => setUsername(e.target.value)}
-          />
-          {isAvailable !== null && (
-            <div className={`onboarding__availability ${isAvailable ? "available" : "taken"}`}>
-              <i className={`fas ${isAvailable ? "fa-check-circle" : "fa-times-circle"}`}></i>
-              <span>{isAvailable ? "Username is available" : "Username is taken"}</span>
-            </div>
-          )}
+          <div
+            className={`onboarding__domain-option ${domainOption === "subdomain" ? "selected" : ""}`}
+            onClick={() => setDomainOption("subdomain")}
+          >
+            <h2>Subdomain</h2>
+            <p>yourblog.domain.com</p>
+          </div>
+          <div
+            className={`onboarding__domain-option ${domainOption === "custom" ? "selected" : ""}`}
+            onClick={() => setDomainOption("custom")}
+          >
+            <h2>Custom Domain</h2>
+            <p>yourblog.com</p>
+            <span className="premium-feature">Premium</span>
+            {domainOption === "custom" && (
+              <div className="onboarding__input">
+                <input
+                  type="text"
+                  name="customDomain"
+                  id="customDomain"
+                  placeholder="Enter your custom domain"
+                  value={customDomain}
+                  onChange={e => setCustomDomain(e.target.value)}
+                />
+              </div>
+            )}
+          </div>
         </motion.div>
-
-        {/* Bottom Navigation Buttons */}
         <motion.div
           className="onboarding__nav"
           initial={{ opacity: 0, scale: 0.8 }}

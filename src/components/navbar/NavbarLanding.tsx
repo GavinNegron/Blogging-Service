@@ -77,7 +77,7 @@ const NavbarLanding = () => {
               </button>
             </div>
             <div className="navbar__cta">
-              <Link href="/signup">
+              <Link href="/register">
                 <button className="navbar__button--cta">Get Started!</button>
               </Link>
             </div>
