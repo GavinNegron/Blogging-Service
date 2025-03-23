@@ -1,16 +1,19 @@
-import { useState } from "react"
-import { motion } from "framer-motion"
+import { useState } from "react";
+import { motion } from "framer-motion";
 
 interface StepProps {
-  next: () => void
-  prev: () => void
+  next: () => void;
+  prev: () => void;
+  username: string;
 }
 
-export default function StepThree({ next, prev }: StepProps) {
-  const [domainOption, setDomainOption] = useState<"subdomain" | "custom">("subdomain")
-  const [customDomain, setCustomDomain] = useState("")
+export default function StepThree({ next, prev, username }: StepProps) {
+  const [domainOption, setDomainOption] = useState<"subdomain" | "custom">("subdomain");
+  const [customDomain, setCustomDomain] = useState("");
 
-  const isValid = domainOption === "subdomain" || (domainOption === "custom" && customDomain.length > 0)
+  const isValid = domainOption === "subdomain" || (domainOption === "custom" && customDomain.length > 0);
+  
+  const displayUsername = username || "yourblog";
 
   return (
     <div className="onboarding">
@@ -20,6 +23,14 @@ export default function StepThree({ next, prev }: StepProps) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
+        <div className="onboarding__progress">
+          <div className="onboarding__progress-bar">
+            <div className="onboarding__progress-indicator completed"></div>
+            <div className="onboarding__progress-indicator completed"></div>
+            <div className="onboarding__progress-indicator active"></div>
+          </div>
+          <span className="onboarding__progress-text no-select">Step 3 of 3</span>
+        </div>
         <motion.div
           className="onboarding__header no-select"
           initial={{ opacity: 0, y: -20 }}
@@ -48,28 +59,16 @@ export default function StepThree({ next, prev }: StepProps) {
             className={`onboarding__domain-option ${domainOption === "subdomain" ? "selected" : ""}`}
             onClick={() => setDomainOption("subdomain")}
           >
-            <h2>Subdomain</h2>
-            <p>yourblog.domain.com</p>
+            <h2><i className="fas fa-globe"></i> Subdomain</h2>
+            <p>{displayUsername}.domain.com</p>
           </div>
           <div
             className={`onboarding__domain-option ${domainOption === "custom" ? "selected" : ""}`}
             onClick={() => setDomainOption("custom")}
           >
-            <h2>Custom Domain</h2>
-            <p>yourblog.com</p>
+            <h2><i className="fas fa-certificate"></i> Custom Domain</h2>
+            <p>{displayUsername}.com</p>
             <span className="premium-feature">Premium</span>
-            {domainOption === "custom" && (
-              <div className="onboarding__input">
-                <input
-                  type="text"
-                  name="customDomain"
-                  id="customDomain"
-                  placeholder="Enter your custom domain"
-                  value={customDomain}
-                  onChange={e => setCustomDomain(e.target.value)}
-                />
-              </div>
-            )}
           </div>
         </motion.div>
         <motion.div
@@ -87,5 +86,5 @@ export default function StepThree({ next, prev }: StepProps) {
         </motion.div>
       </motion.div>
     </div>
-  )
+  );
 }

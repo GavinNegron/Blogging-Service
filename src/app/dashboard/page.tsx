@@ -19,16 +19,6 @@ export default async function DashboardPage() {
         redirect('/login'); 
     }
 
-    const user = await db
-        .select()
-        .from(schema.user)
-        .where(eq(schema.user.id, session.user.id))
-        .then((res) => res[0]);
-
-    if (!user?.onboardingComplete) {
-        redirect('/dashboard/onboarding');
-    }
-
     return (
         <>
             <Head>

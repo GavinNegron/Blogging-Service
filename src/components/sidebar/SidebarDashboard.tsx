@@ -72,7 +72,7 @@ function Sidebar({ user }: SidebarProps) {
             Dashboard
           </Link>
           <div className="sidebar__top-logo-img">
-            <img src="/images/placeholder.png" alt="Placeholder Logo" />
+            <img src="/placeholder.png" alt="Placeholder Logo" />
           </div>
         </div>
         <div className="sidebar__top-arrow" onClick={toggleSidebarState}>
@@ -82,7 +82,7 @@ function Sidebar({ user }: SidebarProps) {
 
       <div className="sidebar__profile">
         <div className="sidebar__profile-icon">
-          <img src={user?.image || "/images/user.jpeg"} draggable="false" alt="User Profile" />
+          <img src={user?.image || "/user.jpeg"} draggable="false" alt="User Profile" />
         </div>
         <div className="d-flex flex-col">
           <span className="sidebar__profile-name">{user?.name || "Guest"}</span>

@@ -10,6 +10,7 @@ export default async function OnboardingPage() {
         headers: await headers(),
     });
 
+
     if (!session?.user?.id) {
         redirect('/login');
     }
@@ -19,9 +20,10 @@ export default async function OnboardingPage() {
             <Head>
                 <title>Dashboard</title>
             </Head>
-            <main className="main db">
+          
+            <div className="main db">
                 <Onboarding />
-            </main>
+            </div>
         </>
     );
 }

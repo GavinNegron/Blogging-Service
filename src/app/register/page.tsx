@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { NavbarLogin } from "@/components/navbar/index";
-import { signUp } from "@/server/users";
 import { authClient } from "@/utils/auth-client";
+import { signUp } from "@/server/users"; 
 import "./register.sass";
 
 export default function Register() {
@@ -14,44 +14,50 @@ export default function Register() {
     name: "",
   });
 
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://accounts.google.com/gsi/client";
-    script.async = true;
-    document.body.appendChild(script);
-
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      await authClient.signIn.social({ provider: "google" });
+    } catch (err) {
+      setError("Google sign-in failed. Please try again.");
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError(null); // No change here, as null is allowed.
+  
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
+      setError("Passwords do not match.");
       return;
     }
-
-    const result = await signUp({
+  
+    setLoading(true);
+  
+    const response = await signUp({
       email: formData.email,
       password: formData.password,
       name: formData.name,
     });
-
-    if (!result.success) {
-      alert(result.message);
+  
+    setLoading(false);
+  
+    if (!response.success) {
+      setError(response.message ?? "An unknown error occurred."); // Ensure message is always a string
+    } else {
+      console.log("User signed up successfully.");
     }
   };
-  const handleGoogleLogin = async () => {
-    const data = await authClient.signIn.social({
-        provider: "google"
-    })
-  }
-  
+
   return (
     <div className="register-page">
       <NavbarLogin />
@@ -113,8 +119,11 @@ export default function Register() {
                     />
                   </div>
                 </div>
+                {error && <p className="error-message">{error}</p>}
                 <div className="register__button">
-                  <button type="submit">Sign Up</button>
+                  <button type="submit" disabled={loading}>
+                    {loading ? "Signing Up..." : "Sign Up"}
+                  </button>
                 </div>
                 <div className="d-flex ac-center jc-center">
                   <span>OR</span>
