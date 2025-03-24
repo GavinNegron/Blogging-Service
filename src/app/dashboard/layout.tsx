@@ -1,27 +1,29 @@
-import { ReactNode } from "react"
-import { redirect } from "next/navigation"
-import { NavbarDashboard } from "@/components/navbar/index"
-import { SidebarDashboard } from "@/components/sidebar/index"
-import { auth } from "@/utils/auth"
-import { headers } from "next/headers"
-import "./dashboard.sass"
+"use client";
+
+import { ReactNode } from "react";
+import { NavbarDashboard } from "@/components/navbar/index";
+import { SidebarDashboard } from "@/components/sidebar/index";
+import { usePathname } from "next/navigation";
+import { authClient } from "@/utils/auth-client";
+import "./dashboard.sass";
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  })
+  const { data: session } = await authClient.getSession()
 
-  if (!session?.user?.id) {
-    redirect("/login")
+  console.log(session)
+  const pathname = usePathname();
+
+  if (pathname.startsWith("/dashboard/onboarding")) {
+    return <>{children}</>;
   }
 
   return (
     <>
       <NavbarDashboard />
       <main className="main db">
-        <SidebarDashboard user={session?.user} />
+        <SidebarDashboard />
         <div className="dashboard">{children}</div>
       </main>
     </>
-  )
+  );
 }

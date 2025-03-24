@@ -4,9 +4,11 @@ import React, { useState } from "react";
 import { NavbarLogin } from "@/components/navbar/index";
 import { authClient } from "@/utils/auth-client";
 import { signUp } from "@/server/users"; 
+import { useRouter } from "next/navigation";
 import "./register.sass";
 
 export default function Register() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -54,7 +56,7 @@ export default function Register() {
     if (!response.success) {
       setError(response.message ?? "An unknown error occurred."); // Ensure message is always a string
     } else {
-      console.log("User signed up successfully.");
+      router.push('/dashboard/onboarding');
     }
   };
 

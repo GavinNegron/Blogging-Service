@@ -47,4 +47,28 @@ export const verification = pgTable("verification", {
 	updatedAt: timestamp('updated_at')
 });
 
+export const blog = pgTable("blog", {
+	id: text("id").primaryKey(),
+	userId: text("user_id").notNull().references(() => user.id, { onDelete: 'cascade' }),
+	blogName: text("blog_name").notNull(),
+	description: text("description"),
+	createdAt: timestamp("created_at").notNull(),
+	updatedAt: timestamp("updated_at").notNull(),
+ });
+
+ export const blogPost = pgTable("blog_post", {
+	id: text("id").primaryKey(), 
+	blogId: text("blog_id").notNull().references(() => blog.id, { onDelete: 'cascade' }), 
+	title: text("title").notNull(), 
+	slug: text("slug").notNull().unique(), 
+	elements: text("elements").notNull(),
+	status: text("status").default('draft'),
+	tags: text("tags"), 
+	createdAt: timestamp("created_at").notNull(),
+	updatedAt: timestamp("updated_at").notNull(), 
+	author: text("author").notNull().references(() => user.id, { onDelete: 'set null' }), 
+ });
+ 
+ 
+
 export const schema = { user, session, account, verification };
