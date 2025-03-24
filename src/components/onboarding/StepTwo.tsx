@@ -88,7 +88,7 @@ export default function StepTwo({ next, prev, setUsername }: StepProps) {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
         >
-          <span>Choose a unique name for your blog (3-20 characters). You can always change it later!</span>
+          <span>Choose a unique name for your blog. You can always change it later!</span>
         </motion.div>
 
         <motion.div
@@ -107,7 +107,7 @@ export default function StepTwo({ next, prev, setUsername }: StepProps) {
             autoComplete="off"
             maxLength={20}
           />
-          {error && (
+          {error && usernameInput.length > 0 && (
             <div className="onboarding__availability taken">
               <i className="fas fa-times-circle"></i>
               <span>{error}</span>

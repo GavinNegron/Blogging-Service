@@ -10,14 +10,14 @@ export default function Onboarding() {
     const [username, setUsername] = useState("");
 
     useEffect(() => {
-        const savedStep = localStorage.getItem("onboardingStep");
+        const savedStep = sessionStorage.getItem("onboardingStep");
         if (savedStep !== null) {
             setStep(parseInt(savedStep, 10));
         }
     }, []);
 
     useEffect(() => {
-        localStorage.setItem("onboardingStep", step.toString());
+        sessionStorage.setItem("onboardingStep", step.toString());
     }, [step]); 
 
     const next = () => setStep((prev) => Math.min(prev + 1, 2));

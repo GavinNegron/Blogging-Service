@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 interface StepProps {
   next: () => void;
@@ -10,10 +11,36 @@ interface StepProps {
 export default function StepThree({ next, prev, username }: StepProps) {
   const [domainOption, setDomainOption] = useState<"subdomain" | "custom">("subdomain");
   const [customDomain, setCustomDomain] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const isValid = domainOption === "subdomain" || (domainOption === "custom" && customDomain.length > 0);
-  
   const displayUsername = username || "yourblog";
+
+  const completeOnboarding = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch("/api/user/onboarding/complete", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to complete onboarding");
+      }
+
+      router.push('/dashboard');
+    } catch (error) {
+      console.error("Onboarding completion error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="onboarding">
@@ -80,8 +107,8 @@ export default function StepThree({ next, prev, username }: StepProps) {
           <button onClick={prev} className="onboarding__button back">
             <i className="fas fa-arrow-left"></i> <span>Back</span>
           </button>
-          <button onClick={next} className="onboarding__button next" disabled={!isValid}>
-            <span>Next</span> <i className="fas fa-arrow-right"></i>
+          <button onClick={completeOnboarding} className="onboarding__button next" disabled={!isValid || loading}>
+            <span>{loading ? "Finishing..." : "Finish"}</span> <i className="fas fa-arrow-right"></i>
           </button>
         </motion.div>
       </motion.div>
