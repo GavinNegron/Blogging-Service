@@ -1,5 +1,5 @@
 .dashboard
-  &__posts
+  &__blog
     &-grid
       margin: 20px 40px
       display: flex
@@ -12,6 +12,9 @@
         &:hover
             background-color: #04856b
             cursor: pointer
+
+      &--title
+        text-overflow: ellipsis
 
       &-header, 
       &-row
@@ -36,7 +39,6 @@
 
         > div
           overflow: hidden
-          text-overflow: ellipsis
           white-space: nowrap
           padding: 12px
 

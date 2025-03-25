@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Checkbox from '@/components/checkbox/';
-import './dashboard-posts.sass';
+import './dashboard-blog.sass';
 
 interface Post {
   _id: string;
@@ -15,11 +15,11 @@ interface Post {
   createdAt: string;
 }
 
-interface PostsClientPageProps {
+interface BlogClientPageProps {
   posts: Post[];
 }
 
-export default function PostsClientPage({ posts }: PostsClientPageProps) {
+export default function BlogClientPage({ posts }: BlogClientPageProps) {
   const [localPosts, setLocalPosts] = useState<Post[]>(posts);
 
   return (
@@ -27,27 +27,27 @@ export default function PostsClientPage({ posts }: PostsClientPageProps) {
       <div className="dashboard__header">
         <span>Manage Posts</span>
       </div>
-      <div className="dashboard__posts-grid">
-        <div className="dashboard__posts-grid-header">
-          <div className="dashboard__posts-grid-checkbox dashboard__posts-grid--item"><Checkbox /></div>
-          <div className='dashboard__posts-grid--item'>Image</div>
-          <div className='dashboard__posts-grid--item'>Title</div>
-          <div className='dashboard__posts-grid--item'>Date</div>
-          <div className='dashboard__posts-grid--item'>Views</div>
-          <div className='dashboard__posts-grid--item'>Status</div>
-          <div className='dashboard__posts-grid--item'>Edit</div>
-          <div className='dashboard__posts-grid--item'>Delete</div>
+      <div className="dashboard__blog-grid">
+        <div className="dashboard__blog-grid-header">
+          <div className="dashboard__blog-grid-checkbox dashboard__blog-grid--item"><Checkbox /></div>
+          <div className='dashboard__blog-grid--item'>Image</div>
+          <div className='dashboard__blog-grid--item dashboard__blog-grid--title'>Title</div>
+          <div className='dashboard__blog-grid--item'>Date</div>
+          <div className='dashboard__blog-grid--item'>Views</div>
+          <div className='dashboard__blog-grid--item'>Status</div>
+          <div className='dashboard__blog-grid--item'>Edit</div>
+          <div className='dashboard__blog-grid--item'>Delete</div>
         </div>
 
         {localPosts.map((post) => (
-          <div key={post._id} className="dashboard__posts-grid-row">
-            <div className="dashboard__posts-grid-checkbox">
+          <div key={post._id} className="dashboard__blog-grid-row">
+            <div className="dashboard__blog-grid-checkbox">
               <Checkbox />
             </div>
-            <div className="dashboard__posts-grid-image">
-              <a href={`/dashboard/posts/edit/${post.slug}`}>
+            <div className="dashboard__blog-grid-image">
+              <a href={`/dashboard/blog/edit/${post.slug}`}>
                 <img 
-                  src={post.imageUrl || 'https://via.placeholder.com/150'} 
+                  src={post.imageUrl || '/placeholder.png'} 
                   alt={post.title || 'Post image'} 
                 />
               </a>
@@ -63,7 +63,7 @@ export default function PostsClientPage({ posts }: PostsClientPageProps) {
             <div>
               <Link 
                 className="dashboard__icon--edit" 
-                href={`/dashboard/posts/edit/${post.slug}`}
+                href={`/dashboard/blog/edit/${post.slug}`}
               >
                 Edit
               </Link>

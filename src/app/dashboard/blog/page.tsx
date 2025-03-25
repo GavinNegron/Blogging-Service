@@ -1,4 +1,4 @@
-import PostsClientPage from './ClientPage';
+import BlogClientPage from './ClientPage';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -16,5 +16,5 @@ async function fetchPosts() {
 
 export default async function PostsPage() {
   const posts = await fetchPosts();
-  return <PostsClientPage posts={posts} />;
+  return <BlogClientPage posts={posts} />;
 }

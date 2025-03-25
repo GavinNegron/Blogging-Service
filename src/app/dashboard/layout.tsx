@@ -31,10 +31,14 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
   return (
     <>
-      <NavbarDashboard />
       <main className="main db">
-        <SidebarDashboard session={session} />
-        <div className="dashboard">{children}</div>
+        <SidebarDashboard/>
+        <div className="dashboard">
+        <NavbarDashboard  session={session} />
+        <div className="dashboard__inner">
+          {children}
+        </div>
+        </div>
       </main>
     </>
   );

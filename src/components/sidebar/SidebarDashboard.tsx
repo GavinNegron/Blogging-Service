@@ -6,11 +6,7 @@ import Link from "next/link";
 import { authClient } from "@/utils/auth-client";
 import "./SidebarDashboard.sass";
 
-interface SidebarProps {
-  session: any;
-}
-
-function Sidebar({ session }: SidebarProps) {
+function Sidebar() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const router = useRouter();
 
@@ -60,30 +56,19 @@ function Sidebar({ session }: SidebarProps) {
           <i className={`fa-solid ${sidebarCollapsed ? "fa-chevron-right" : "fa-chevron-left"}`} style={{ color: "#ffffff" }}></i>
         </div>
       </div>
-
-      <div className="sidebar__profile">
-        <div className="sidebar__profile-icon">
-          <img src={session?.user?.image || "/user.jpeg"} draggable="false" alt="User Profile" />
-        </div>
-        <div className="d-flex flex-col">
-          <span className="sidebar__profile-name">{session?.user?.name || "Guest"}</span>
-          <span className="sidebar__profile-email">{session?.user?.email || "No Email"}</span>
-        </div>
-      </div>
-
       <div className="sidebar__links">
         <Link href="/dashboard/" className="sidebar__links-item" draggable="false">
           <div className="sidebar__links-item-icon">
             <i className="fa-solid fa-chart-line" style={{ color: "#ffffff" }}></i>
           </div>
-          <div className="sidebar__links-item-text">Dashboard</div>
+          <div className="sidebar__links-item-text">Home</div>
         </Link>
 
-        <Link href="/dashboard/posts" className="sidebar__links-item" draggable="false">
+        <Link href="/dashboard/blog" className="sidebar__links-item" draggable="false">
           <div className="sidebar__links-item-icon">
             <i className="fa-solid fa-newspaper" style={{ color: "#ffffff" }}></i>
           </div>
-          <div className="sidebar__links-item-text">Posts</div>
+          <div className="sidebar__links-item-text">Blog</div>
         </Link>
 
         <Link href="/dashboard/authors" className="sidebar__links-item" draggable="false">
