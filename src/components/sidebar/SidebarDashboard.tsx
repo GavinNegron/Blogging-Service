@@ -6,23 +6,13 @@ import Link from "next/link";
 import { authClient } from "@/utils/auth-client";
 import "./SidebarDashboard.sass";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  emailVerified: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  image?: string | null;
-}
-
 interface SidebarProps {
-  user?: User | null;
+  session: any;
 }
 
-function Sidebar({ user }: SidebarProps) {
+function Sidebar({ session }: SidebarProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const router = useRouter(); 
+  const router = useRouter();
 
   useEffect(() => {
     setSidebarCollapsed(window.innerWidth <= 1109);
@@ -49,7 +39,7 @@ function Sidebar({ user }: SidebarProps) {
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
-          router.push("/"); 
+          router.push("/");
         },
       },
     });
@@ -73,11 +63,11 @@ function Sidebar({ user }: SidebarProps) {
 
       <div className="sidebar__profile">
         <div className="sidebar__profile-icon">
-          <img src={user?.image || "/user.jpeg"} draggable="false" alt="User Profile" />
+          <img src={session?.user?.image || "/user.jpeg"} draggable="false" alt="User Profile" />
         </div>
         <div className="d-flex flex-col">
-          <span className="sidebar__profile-name">{user?.name || "Guest"}</span>
-          <span className="sidebar__profile-email">{user?.email || "No email"}</span>
+          <span className="sidebar__profile-name">{session?.user?.name || "Guest"}</span>
+          <span className="sidebar__profile-email">{session?.user?.email || "No Email"}</span>
         </div>
       </div>
 
