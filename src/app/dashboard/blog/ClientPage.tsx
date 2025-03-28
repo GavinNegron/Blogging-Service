@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Checkbox from '@/components/ui/checkbox/';
+import StatBox from '@/components/analytics';
 import Checkbox from '@/components/ui/checkbox';
 import './dashboard-blog.sass';
 
@@ -24,8 +26,43 @@ export default function BlogClientPage({ posts }: BlogClientPageProps) {
 
   return (
     <>
+     <div className="dashboard__blog">
       <div className="dashboard__header">
         <span>Manage Posts</span>
+      </div>
+      <div className="dashboard__blog__stats">
+        <StatBox 
+            icon='fa-solid fa-eye'
+            header='Daily Views'
+            value={15}
+            change={12}
+            bgColor='#7175d224'
+            color='#636af9'
+          />
+          <StatBox 
+            icon='fa-solid fa-heart'
+            header='Daily Likes'
+            value={14}
+            change={63}
+            bgColor='#af71d224'
+            color='#9d6fff'
+          />
+          <StatBox  
+            icon='fa-solid fa-comment'
+            header='Daily Comments'
+            value={34}
+            change={32}
+            bgColor='#53caff24'
+            color='#41a2e3'
+          />
+          <StatBox 
+            icon='fa-solid fa-share'
+            header='Daily Shares'
+            value={23}
+            change={34}
+            bgColor='#73d9d424'
+            color='#4ad89c'
+          />
       </div>
       <div className="dashboard__blog-grid">
         <div className="dashboard__blog-grid-header">
@@ -78,7 +115,8 @@ export default function BlogClientPage({ posts }: BlogClientPageProps) {
             </div>
           </div>
         ))}
-      </div>
+    </div>
+     </div>
     </>
   );
 }

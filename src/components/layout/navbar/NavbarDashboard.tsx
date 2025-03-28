@@ -18,9 +18,11 @@ const NavbarDashboard = ({ session }: DashboardProps) => {
             </span>
           </div>
           <div className={styles.navbar__top__item}>
-            <div className={styles.navbar__profile}>
-              <img src={session?.user?.image || "/user.jpeg"} draggable="false" alt="User Profile" />
-            </div>
+            <button>
+              <div className={styles.navbar__profile}>
+                <img src={session?.user?.image || "/user.jpeg"} draggable="false" alt="User Profile" />
+              </div>
+            </button>
           </div>
         </div>
       </div>
