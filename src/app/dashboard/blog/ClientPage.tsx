@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import Checkbox from '@/components/checkbox/';
+import Checkbox from '@/components/ui/checkbox';
 import './dashboard-blog.sass';
 
 interface Post {

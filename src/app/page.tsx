@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useTypingEffect } from '@/hooks/useTypingEffect';
-import { NavbarLanding } from '@/components/navbar/index';
+import { NavbarLanding } from '@/components/layout/navbar/index';
 import "./landing.sass";
 
 export default function Page() {

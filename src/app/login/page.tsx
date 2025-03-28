@@ -2,10 +2,10 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { NavbarLogin } from '@/components/navbar/index';
+import { NavbarAuth } from '@/components/layout/navbar/index';
 import { signIn } from '@/server/users';
-import Link from 'next/link';
 import './login.sass';
+import GoogleLoginButton from '@/components/ui/buttons/google/GoogleLogin';
 
 export default function Page() {
   const [email, setEmail] = useState('');
@@ -33,7 +33,7 @@ export default function Page() {
 
   return (
     <div className='login-page'>
-      <NavbarLogin />
+      <NavbarAuth type='login'/>
       <main className='d-flex ai-center jc-center flex-col'>
         <div className="login">
           <div className="login__inner">
@@ -43,14 +43,14 @@ export default function Page() {
               </div>
               <form className="login__form" onSubmit={handleSubmit}>
                 {error && <p className="login__form__error"><i className="fa-solid fa-hexagon-exclamation"></i>{error}</p>}
-                <span>Enter email:</span>
+                <span className='login__form-span'>Enter email:</span>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
-                <span>Enter password:</span>
+                <span className='login__form-span'>Enter password:</span>
                 <input
                   type="password"
                   value={password}
@@ -60,17 +60,9 @@ export default function Page() {
                 <div className="login__button">
                   <button type="submit">Submit</button>
                 </div>
+                <span className='d-flex ac-center jc-center login__form-span'>OR</span>
+                <GoogleLoginButton/>
               </form>
-            </div>
-            <div className="login__section login__section--content">
-              <div className="login__section--content__header">
-                <h1>New Here? Create an account now!</h1>
-              </div>
-              <div className="login__section--content__button">
-                <button>
-                  <Link href='/register'>Register Now</Link>
-                </button>
-              </div>
             </div>
           </div>
         </div>

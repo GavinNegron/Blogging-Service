@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { NavbarLogin } from "@/components/navbar/index";
-import { authClient } from "@/utils/auth-client";
+import { NavbarAuth } from "@/components/layout/navbar/";
 import { signUp } from "@/server/users"; 
 import { useRouter } from "next/navigation";
 import "./register.sass";
+import GoogleLoginButton from "@/components/ui/buttons/google/GoogleLogin";
 
 export default function Register() {
   const router = useRouter();
@@ -26,17 +26,9 @@ export default function Register() {
     });
   };
 
-  const handleGoogleLogin = async () => {
-    try {
-      await authClient.signIn.social({ provider: "google" });
-    } catch (err) {
-      setError("Google sign-in failed. Please try again.");
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError(null); // No change here, as null is allowed.
+    setError(null);
   
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match.");
@@ -54,7 +46,7 @@ export default function Register() {
     setLoading(false);
   
     if (!response.success) {
-      setError(response.message ?? "An unknown error occurred."); // Ensure message is always a string
+      setError(response.message ?? "An unknown error occurred.");
     } else {
       router.push('/dashboard/onboarding');
     }
@@ -62,7 +54,7 @@ export default function Register() {
 
   return (
     <div className="register-page">
-      <NavbarLogin />
+      <NavbarAuth type='register'/>
       <main className="d-flex ai-center jc-center flex-row">
         <section className="register">
           <div className="register__inner">
@@ -123,19 +115,13 @@ export default function Register() {
                 </div>
                 {error && <p className="error-message">{error}</p>}
                 <div className="register__button">
-                  <button type="submit" disabled={loading}>
-                    {loading ? "Signing Up..." : "Sign Up"}
-                  </button>
+                  <button type="submit" disabled={loading}>Sign Up</button>
                 </div>
                 <div className="d-flex ac-center jc-center">
                   <span>OR</span>
                 </div>
+                <GoogleLoginButton/>
               </form>
-              <div className="register__button">
-                <button type="button" onClick={handleGoogleLogin}>
-                  Sign in with Google
-                </button>
-              </div>
             </div>
           </div>
         </section>

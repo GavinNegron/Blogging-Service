@@ -3,9 +3,9 @@
 import { ReactNode, useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { authClient } from "@/utils/auth-client";
-import { NavbarDashboard } from "@/components/navbar/index";
-import { SidebarDashboard } from "@/components/sidebar/index";
-import LoadingScreen from "@/components/base/LoadingScreen/";
+import { NavbarDashboard } from "@/components/layout/navbar/index";
+import { SidebarDashboard } from "@/components/layout/sidebar/index";
+import LoadingScreen from "@/components/shared/LoadingScreen";
 import "./dashboard.sass";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
