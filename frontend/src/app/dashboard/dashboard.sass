@@ -1,0 +1,31 @@
+.dashboard
+  position: relative
+  left: 300px
+  display: flex
+  flex-direction: column
+  width: calc( 100vw - 300px )
+  height: 100vh
+  position: relative
+  background-color: #1b1c1f
+
+  &__inner
+    top: 50px
+    position: relative
+    height: calc(100% - 50px)
+
+  &__banner
+    display: flex
+    align-items: center
+    justify-content: space-between
+    font-family: var(--font-poppins)
+    font-weight: 600
+    gap: 35px
+    width: 100%
+    padding: 25px 40px 20px 40px
+
+    &-header
+      font-size: 30px
+
+.sidebar.collapsed + .dashboard
+  left: 78px
+  width: calc(100vw - 78px)

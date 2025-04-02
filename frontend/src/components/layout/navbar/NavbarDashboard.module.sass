@@ -1,0 +1,43 @@
+.navbar
+  display: flex
+  flex-direction: column
+  position: fixed
+  width: inherit
+  z-index: 10000
+  border-bottom: solid 2px white
+  font-family: var(--font-inter)
+
+  &__top
+    position: relative
+    top: 0
+    left: 0
+    right: 0
+    height: 50px  
+    background-color: #1c1c1c
+    width: 100%
+    display: flex
+    align-items: center
+    justify-content: space-between
+    padding: 0 20px
+    display: flex
+    flex-direction: row
+    justify-content: space-between
+    width: 100%
+
+    @media screen and ( min-width:  768px)
+      padding: 0 50px
+
+    &__inner
+      display: flex
+      width: 100%
+      flex-direction: row
+      justify-content: space-between
+      align-items: center
+
+    &__item
+      height: 100%
+
+  &__profile img
+      width: 35px
+      height: 1
+      border-radius: 100%

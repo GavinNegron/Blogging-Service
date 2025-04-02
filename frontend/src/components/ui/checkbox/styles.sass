@@ -1,0 +1,66 @@
+.ios-checkbox
+  --checkbox-size: 15px
+  --checkbox-color: #626bfa
+  --checkbox-bg: #0066ec
+  --checkbox-border: #0077ff
+
+  position: relative
+  display: inline-block
+  cursor: pointer
+  user-select: none
+  -webkit-tap-highlight-color: transparent
+
+  input
+    display: none
+
+  .checkbox-wrapper
+    position: relative
+    width: var(--checkbox-size)
+    height: var(--checkbox-size)
+    border-radius: 2px
+    transition: transform 0.2s ease
+
+  .checkbox-bg
+    position: absolute
+    inset: 0
+    border-radius: 2px
+    background: white
+    transition: all 0.2s ease
+
+  .checkbox-icon
+    position: absolute
+    inset: 0
+    margin: auto
+    stroke-width: 4
+    stroke-linecap: round
+    width: 80%
+    height: 80%
+    color: white
+    transform: scale(0)
+    transition: all 0.2s ease
+
+  .check-path
+    stroke-dasharray: 40
+    stroke-dashoffset: 40
+    transition: stroke-dashoffset 0.3s ease 0.1s
+
+  input:checked + .checkbox-wrapper
+    .checkbox-bg
+      background: var(--checkbox-color)
+
+    .checkbox-icon
+      transform: scale(1)
+
+    .check-path
+      stroke-dashoffset: 0
+
+  &:hover .checkbox-wrapper
+    transform: scale(1.05)
+
+  &:active .checkbox-wrapper
+    transform: scale(0.95)
+
+
+  &.blue
+    --checkbox-color: #3b82f6
+    --checkbox-bg: #11ff11
