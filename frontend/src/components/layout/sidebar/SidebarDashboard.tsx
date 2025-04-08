@@ -35,12 +35,12 @@ function Sidebar() {
   };
 
   return (
-    <aside className={`sidebar ${sidebarCollapsed ? "collapsed" : ""}`}>
+    <aside className={`sidebar no-select ${sidebarCollapsed ? "collapsed" : ""}`}>
       <div className="sidebar__top d-flex align-items-center">
         <div className="sidebar__top-logo">
           <Link href="/" draggable="false" className="sidebar__top-logo-name">User Dashboard</Link>
           <div className="sidebar__top-logo-img">
-            <img src="/placeholder.png" alt="Placeholder Logo" />
+            <img draggable='false' src="/placeholder.png" alt="Placeholder Logo" />
           </div>
         </div>
         <div className="sidebar__top-arrow" onClick={toggleSidebarState}>

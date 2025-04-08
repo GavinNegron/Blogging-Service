@@ -12,7 +12,7 @@ class PostController {
       const userBlog = await db.select().from(blog).where(eq(blog.userId, userId)).limit(1);
 
       if (userBlog.length === 0) {
-        res.status(404).json({ error: 'Blog not found for this user.' });
+        res.status(200).json({ error: 'Blog not found for this user.' });
         return;
       }
 
@@ -36,6 +36,43 @@ class PostController {
     } catch (error) {
       res.status(500).json({ error: 'Something went wrong when fetching user blog.' });
     };
+  };
+  createPost = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const userId = req.params.id;
+      const { title, slug, status, tags, elements } = req.body;
+
+      if (!title || !slug || !status || !tags || !elements) {
+        res.status(400).json({ error: "All fields are required." })
+      }
+  
+      const userBlog = await db.select().from(blog).where(eq(blog.userId, userId)).limit(1);
+  
+      if (userBlog.length === 0) {
+        res.status(404).json({ error: 'Blog not found for this user.' });
+        return;
+      }
+  
+      const blogId = userBlog[0].id;
+  
+      const insertedPost = await db.insert(blogPost).values({
+        id: crypto.randomUUID(), 
+        blogId,
+        title,
+        slug,
+        status,
+        tags,
+        elements,
+        author: userId, 
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }).returning();
+  
+      res.status(201).json(insertedPost);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Something went wrong when creating the post.' });
+    }
   };
 };
 

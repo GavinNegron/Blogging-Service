@@ -1,14 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { lazy, useState } from 'react';
 import Link from 'next/link';
-import Fuse from 'fuse.js';
 import Checkbox from '../../../components/ui/checkbox';
 import Search from '../../../components/ui/search';
+import DeletePost from '@/components/popups/dashboard/DeletePost';
 import './dashboard-blog.sass';
 
+
 interface Post {
-  _id: string;
+  id: string;
   title: string;
   slug: string;
   imageUrl: string;
@@ -21,65 +22,23 @@ interface BlogClientPageProps {
   posts: Post[];
 }
 
-export default function BlogClientPage({ posts }: BlogClientPageProps) {
+export default function BlogClientPage({ posts = [] }: BlogClientPageProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState('');
-  const [selectedPosts, setSelectedPosts] = useState([]);
-  const [sortConfig, setSortConfig] = useState({ key: 'date', direction: 'desc' });
 
-  const fuse = new Fuse(posts, {
-    keys: ['title'],
-    threshold: 0.3,
-  });
-
-  const filteredPosts = searchQuery
-    ? fuse.search(searchQuery).map(result => result.item)
-    : (Array.isArray(posts) ? posts.filter((post) => {
-        if (selectedStatus && post?.status !== selectedStatus) return false;
-        return true;
-      }) : []);
-
-  const sortedPosts = filteredPosts.slice(0, 5).sort((a, b) => {
-    if (sortConfig.key === 'date') {
-      return sortConfig.direction === 'desc'
-        ? new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        : new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-    } else if (sortConfig.key === 'views') {
-      return sortConfig.direction === 'desc' ? b.views - a.views : a.views - b.views;
-    }
-    return 0;
-  });
-      
-  const handleSortChange = (key: 'date' | 'views') => {
-    let direction: 'asc' | 'desc' = 'desc';
-    if (sortConfig.key === key && sortConfig.direction === 'desc') {
-      direction = 'asc';
-    }
-    setSortConfig({ key, direction });
-  };
-      
-  useEffect(() => {
-    const modifySection = document.querySelector('.dashboard__modify') as HTMLElement | null;
-    if (modifySection) {
-      modifySection.style.display = selectedPosts.length > 0 ? 'flex' : 'none';
-    }
-  }, [selectedPosts]);
-      
   return (
     <>
       <div className="dashboard__blog">
-        <div className="dashboard__banner">
+        <div className="dashboard__banner no-select">
           <div className="dashboard__banner-header">
             <span>Manage Posts</span>
           </div>
         </div>
-        
-        <div className="dashboard__blog-grid">
+        <div className="dashboard__blog-grid no-select">
           <div className="dashboard__blog__top">
             <div className="dashboard__blog__search">
               <Search value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
             </div>
-            <div className="dashboard__blog__filters no-select">
+            <div className="dashboard__blog__filters">
               <div className="dashboard__filters">
                 <div className="dashboard__filters-item">
                   <Checkbox />
@@ -117,54 +76,49 @@ export default function BlogClientPage({ posts }: BlogClientPageProps) {
             <div className="dashboard__blog-grid-checkbox dashboard__blog-grid-item"><Checkbox /></div>
             <div className="dashboard__blog-grid-item">Image</div>
             <div className="dashboard__blog-grid-item dashboard__blog-grid-title">Title</div>
-            <div className="dashboard__blog-grid-item" onClick={() => handleSortChange('date')}>Date</div>
-            <div className="dashboard__blog-grid-item" onClick={() => handleSortChange('views')}>Views</div>
+            <div className="dashboard__blog-grid-item">Date</div>
+            <div className="dashboard__blog-grid-item">Views</div>
             <div className="dashboard__blog-grid-item">Status</div>
             <div className="dashboard__blog-grid-item">Edit</div>
             <div className="dashboard__blog-grid-item">Delete</div>
           </div>
 
-          {posts.map((post) => (
-            <div key={post._id} className="dashboard__blog-grid-row">
-              <div className="dashboard__blog-grid-checkbox">
-                <Checkbox />
+          {posts?.length > 0 ? (
+            posts.map((post) => (
+              <div key={post.id} className="dashboard__blog-grid-row">
+                <div className="dashboard__blog-grid-checkbox">
+                  <Checkbox />
+                </div>
+                <div className="dashboard__blog-grid-image">
+                  <a href={`/dashboard/blog/edit/${post.slug}`}>
+                    <img 
+                      src={post.imageUrl || '/placeholder.png'} 
+                      alt={post.title || 'Post image'} 
+                    />
+                  </a>
+                </div>
+                <div>{post.title}</div>
+                <div>
+                  {new Date(post.createdAt).toLocaleDateString()}
+                </div>
+                <div>{post.views || 0}</div>
+                <div>
+                  <i>{post.status || 'Published'}</i>
+                </div>
+                <div>
+                  <Link className="dashboard__icon--edit" href={`/dashboard/blog/edit/${post.slug}`}>Edit</Link>
+                </div>
+                <div>
+                  <button className="dashboard__icon--delete" popoverTarget='p-delete'>Delete</button>
+                </div>
               </div>
-              <div className="dashboard__blog-grid-image">
-                <a href={`/dashboard/blog/edit/${post.slug}`}>
-                  <img 
-                    src={post.imageUrl || '/placeholder.png'} 
-                    alt={post.title || 'Post image'} 
-                  />
-                </a>
-              </div>
-              <div>{post.title}</div>
-              <div>
-                {new Date(post.createdAt).toLocaleDateString()}
-              </div>
-              <div>{post.views || 0}</div>
-              <div>
-                <i>{post.status || 'Published'}</i>
-              </div>
-              <div>
-                <Link 
-                  className="dashboard__icon--edit" 
-                  href={`/dashboard/blog/edit/${post.slug}`}
-                >
-                  Edit
-                </Link>
-              </div>
-              <div>
-                <Link 
-                  className="dashboard__icon--delete" 
-                  href="#"
-                >
-                  Delete
-                </Link>
-              </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <div className='dashboard__blog-grid__no-posts'>No posts found.</div>
+          )}
         </div>
       </div>
+      <DeletePost/>
     </>
   );
-}
+};

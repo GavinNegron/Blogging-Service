@@ -1,8 +1,8 @@
 import express from "express";
-import PostController from "../controllers/user/PostController";
+import UserController from "../controllers/user/UserController";
 
 export const app = express.Router()
 
-app.get('/api/auth/session', PostController.getUserPosts);
+app.get('/api/user/profile', UserController.getUserProfile);
 
 export default app;

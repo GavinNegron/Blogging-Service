@@ -17,9 +17,9 @@ const NavbarDashboard = ({ session }: DashboardProps) => {
               <Link href='/dashboard'>PLACEHOLDER</Link>
             </span>
           </div>
-          <div className={styles.navbar__top__item}>
+          <div className={`${styles.navbar__top__item} d-flex`}>
             <button>
-              <div className={styles.navbar__profile}>
+              <div className={`${styles.navbar__profile} d-flex`}>
                 <img src={session?.user?.image || "/user.jpeg"} draggable="false" alt="User Profile" />
               </div>
             </button>
