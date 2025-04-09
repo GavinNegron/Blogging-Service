@@ -1,12 +1,14 @@
 'use client';
 
-import { lazy, useState } from 'react';
+import { useEffect, useState, lazy } from 'react';
 import Link from 'next/link';
 import Checkbox from '../../../components/ui/checkbox';
 import Search from '../../../components/ui/search';
-import DeletePost from '@/components/popups/dashboard/DeletePost';
+import { usePopup } from '@/contexts/PopupContext';
+import { usePostContext } from '@/contexts/PostContext';
 import './dashboard-blog.sass';
 
+const DeletePost = lazy(() => import('@/components/popups/dashboard/DeletePost'));
 
 interface Post {
   id: string;
@@ -23,6 +25,10 @@ interface BlogClientPageProps {
 }
 
 export default function BlogClientPage({ posts = [] }: BlogClientPageProps) {
+  const { handleSelectPost, selectedPosts } = usePostContext();
+
+  const { togglePopup } = usePopup();
+
   const [searchQuery, setSearchQuery] = useState('');
 
   return (
@@ -71,7 +77,6 @@ export default function BlogClientPage({ posts = [] }: BlogClientPageProps) {
               </div>
             </div>
           </div>
-
           <div className="dashboard__blog-grid-header">
             <div className="dashboard__blog-grid-checkbox dashboard__blog-grid-item"><Checkbox /></div>
             <div className="dashboard__blog-grid-item">Image</div>
@@ -87,7 +92,7 @@ export default function BlogClientPage({ posts = [] }: BlogClientPageProps) {
             posts.map((post) => (
               <div key={post.id} className="dashboard__blog-grid-row">
                 <div className="dashboard__blog-grid-checkbox">
-                  <Checkbox />
+                  <Checkbox onChange={() => handleSelectPost(post.id)}/>
                 </div>
                 <div className="dashboard__blog-grid-image">
                   <a href={`/dashboard/blog/edit/${post.slug}`}>
@@ -109,7 +114,7 @@ export default function BlogClientPage({ posts = [] }: BlogClientPageProps) {
                   <Link className="dashboard__icon--edit" href={`/dashboard/blog/edit/${post.slug}`}>Edit</Link>
                 </div>
                 <div>
-                  <button className="dashboard__icon--delete" popoverTarget='p-delete'>Delete</button>
+                  <button className="dashboard__icon--delete" onClick={() => togglePopup('deletePost', true)}>Delete</button>
                 </div>
               </div>
             ))
@@ -118,6 +123,7 @@ export default function BlogClientPage({ posts = [] }: BlogClientPageProps) {
           )}
         </div>
       </div>
+      {/* ----- POPUP COMPONENTS ----- */}
       <DeletePost/>
     </>
   );

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import axios from 'axios';
+import api from '@/utils/axios.config';
 
 interface UserInterface {
     id: string;
@@ -31,7 +31,7 @@ const useUserStore = create<useUserInterface>((set) => ({
     fetchUserData: async () => {
         set({ isLoading: true });
         try {
-            const response = await axios.get('/api/user/profile', {
+            const response = await api.get('/api/user/profile', {
                 withCredentials: true
             });
             set({ user: response.data.user});

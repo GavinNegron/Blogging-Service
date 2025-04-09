@@ -7,4 +7,6 @@ app.get('/api/user/:id/blog/posts', PostController.getUserPosts);
 
 app.post('/api/user/:id/blog/posts', PostController.createPost);
 
+app.delete('/api/user/:id/blog/posts/', PostController.deletePost);
+
 export default app;

@@ -3,9 +3,9 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { NavbarAuth } from '@/components/layout/navbar/index';
-import './login.sass';
 import GoogleLoginButton from '@/components/ui/buttons/google/GoogleLogin';
 import { authClient } from '@/utils/auth-client';
+import './login.sass';
 
 export default function Page() {
     const [email, setEmail] = useState('');
@@ -59,15 +59,13 @@ export default function Page() {
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    required
-                                />
+                                    required/>
                                 <span className='login__form-span'>Enter password:</span>
                                 <input
                                     type="password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    required
-                                />
+                                    required/>
                                 <div className="login__button">
                                     <button type="submit">Submit</button>
                                 </div>

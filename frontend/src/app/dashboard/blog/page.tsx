@@ -1,9 +1,8 @@
 import ClientPage from './ClientPage';
 import { Metadata } from 'next';
 import { fetchUserPosts } from '@/services/PostService';
-import rpc from '@/utils/axios.config';
+import api from '@/utils/axios.config';
 import { cookies } from 'next/headers';
-
 
 export const metadata: Metadata = {
   title: 'Manage Posts',
@@ -12,7 +11,7 @@ export const metadata: Metadata = {
 export default async function PostsPage() {
   const cookieHeader = (await cookies()).toString();
 
-  const session = await rpc.get('/api/auth/get-session', {
+  const session = await api.get('/api/auth/get-session', {
     headers: {
       cookie: cookieHeader
     },
