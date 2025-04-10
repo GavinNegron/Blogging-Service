@@ -12,7 +12,7 @@ class PostController {
       const userBlog = await db.select().from(blog).where(eq(blog.userId, userId)).limit(1);
 
       if (userBlog.length === 0) {
-        res.status(200).json({ error: 'Blog not found for this user.' });
+        res.status(200).json({ success: false, error: 'Blog not found for this user.' });
         return;
       }
 
@@ -34,7 +34,7 @@ class PostController {
         res.json(posts);
       return;
     } catch (error) {
-      res.status(500).json({ error: 'Something went wrong when fetching user blog.' });
+      res.status(500).json({ success: false, error: 'Something went wrong when fetching user blog.' });
     };
   };
 
@@ -44,13 +44,13 @@ class PostController {
       const { title, slug, status, tags, elements } = req.body;
 
       if (!title || !slug || !status || !tags || !elements) {
-        res.status(400).json({ error: "All fields are required." })
+        res.status(400).json({ success: false, error: "All fields are required." })
       }
   
       const userBlog = await db.select().from(blog).where(eq(blog.userId, userId)).limit(1);
   
       if (userBlog.length === 0) {
-        res.status(404).json({ error: 'Blog not found for this user.' });
+        res.status(404).json({ success: false, error: 'Blog not found for this user.' });
         return;
       }
   
@@ -72,7 +72,7 @@ class PostController {
       res.status(201).json(insertedPost);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'Something went wrong when creating the post.' });
+      res.status(500).json({ success: false, error: 'Something went wrong when creating the post.' });
     }
   };
 
@@ -90,14 +90,14 @@ class PostController {
       }
       
       if (!id || postIds.length === 0) {
-        res.status(400).json({ error: 'All fields are required.' });
+        res.status(400).json({ success: false, error: 'All fields are required.' });
         return;
       }
   
       // Select the users blog
       const userBlog = await db.select().from(blog).where(eq(blog.id, id)).limit(1);
       if (userBlog.length === 0) {
-        res.status(404).json({ error: 'Blog not found for this user.' });
+        res.status(404).json({ success: false, error: 'Blog not found for this user.' });
         return;
       }
   
@@ -106,17 +106,17 @@ class PostController {
       const foundPostIds = new Set(posts.map((post) => post.id));
   
       if (!postIds.every((postId) => foundPostIds.has(postId))) {
-        res.status(404).json({ error: 'One or more posts not found or do not belong to this blog.' });
+        res.status(404).json({ success: false, error: 'One or more posts not found or do not belong to this blog.' });
         return;
       }
       
       // Delete the posts
       await Promise.all(postIds.map((postId) => db.delete(blogPost).where(eq(blogPost.id, postId))));
   
-      res.status(200).json({ message: `${postIds.length} post(s) deleted successfully.` });
+      res.status(200).json({ success: true, message: `${postIds.length} post(s) deleted successfully.` });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'An unknown error occurred. Please try again later.' });
+      res.status(500).json({ success: false, error: 'An unknown error occurred. Please try again later.' });
     }
   };
 };

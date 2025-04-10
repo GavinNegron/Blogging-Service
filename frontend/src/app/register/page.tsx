@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { NavbarAuth } from "@/components/layout/navbar";
 import GoogleLoginButton from "@/components/ui/buttons/google/GoogleLogin";
 import { authClient } from "@/utils/auth-client";
+import { registerSchema } from "@/utils/validation";
 import "./register.sass";
 
 export default function Register() {
@@ -16,47 +17,93 @@ export default function Register() {
     name: "",
   });
 
-  const [error, setError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
+    const { name, value } = e.target
+    const updatedFormData = {
       ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError(null);
-  
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match.");
-      return;
+      [name]: value
     }
   
-    setLoading(true);
+    const mappedFormData = {
+      ...updatedFormData,
+      confirm: updatedFormData.confirmPassword
+    }
   
-    const response = await authClient.signUp.email({
-      email: formData.email,
-      password: formData.password,
-      name: formData.name,
-      fetchOptions: {
-        onSuccess: () => {
-          router.push('/dashboard');
-        },
-        onError: () => {
-          setError('An error occured, please try again later.');
+    setFormData(updatedFormData)
+  
+    const result = registerSchema.safeParse(mappedFormData)
+  
+    if (!result.success) {
+      const fieldError = result.error.errors.find((error) =>
+        error.path[0] === (name === 'confirmPassword' ? 'confirm' : name)
+      )
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: fieldError ? fieldError.message : ''
+      }))
+    } else {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: ''
+      }))
+    }
+  }
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+  
+    const mappedFormData = {
+      ...formData,
+      confirm: formData.confirmPassword
+    }
+  
+    const result = registerSchema.safeParse(mappedFormData)
+  
+    if (!result.success) {
+      const errors = result.error.errors.reduce((acc, err) => {
+        const key = err.path[0] === 'confirm' ? 'confirmPassword' : err.path[0]
+        acc[key as string] = err.message
+        return acc
+      }, {} as Record<string, string>)
+      setErrors(errors)
+      return
+    }
+  
+    setLoading(true)
+  
+    try {
+      await authClient.signUp.email({
+        email: formData.email,
+        password: formData.password,
+        name: formData.name,
+        fetchOptions: {
+          onSuccess: () => {
+            router.push("/dashboard")
+          },
+          onError: () => {
+            setErrors((prevErrors) => ({
+              ...prevErrors,
+              form: "An error occurred, please try again later."
+            }))
+          }
         }
-      }
-    });
+      })
+    } catch (error) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        form: "An error occurred, please try again later."
+      }))
+    }
   
-    setLoading(false);
-  };
+    setLoading(false)
+  }
 
   return (
     <div className="register-page">
-      <NavbarAuth type='register'/>
+      <NavbarAuth type="register" />
       <main className="d-flex ai-center jc-center flex-row">
         <section className="register">
           <div className="register__inner">
@@ -76,6 +123,9 @@ export default function Register() {
                       onChange={handleChange}
                       required
                     />
+                    {errors.name && (
+                      <span className="register__form-error">{errors.name}</span>
+                    )}
                   </div>
                 </div>
                 <div className="register__form-row">
@@ -89,6 +139,9 @@ export default function Register() {
                       onChange={handleChange}
                       required
                     />
+                    {errors.email && (
+                      <span className="register__form-error">{errors.email}</span>
+                    )}
                   </div>
                 </div>
                 <div className="register__form-row">
@@ -101,6 +154,7 @@ export default function Register() {
                       value={formData.password}
                       onChange={handleChange}
                       required
+                      autoComplete="new-password"
                     />
                   </div>
                   <div className="register__form-item">
@@ -112,17 +166,27 @@ export default function Register() {
                       value={formData.confirmPassword}
                       onChange={handleChange}
                       required
+                      autoComplete="new-password"
                     />
                   </div>
-                </div>
-                {error && <p className="error-message">{error}</p>}
+                </div>       
+                {errors.password && (
+                  <span className="d-flex jc-center register__form-error">{errors.password}</span>
+                )}
+                {errors.confirmPassword && (
+                    <span className="d-flex jc-center register__form-error">
+                      {errors.confirmPassword}
+                    </span>
+                  )}
                 <div className="register__button">
-                  <button type="submit" disabled={loading}>Sign Up</button>
+                  <button type="submit" disabled={loading}>
+                    Sign Up
+                  </button>
                 </div>
                 <div className="d-flex ac-center jc-center">
                   <span>OR</span>
                 </div>
-                <GoogleLoginButton/>
+                <GoogleLoginButton />
               </form>
             </div>
           </div>

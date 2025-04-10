@@ -3,15 +3,14 @@ import styles from './styles.module.sass'
 
 interface DefaultButtonProps {
   children: ReactNode,
-  background?: string,
 }
 
-const DefaultButton: React.FC<DefaultButtonProps> = ({ children, background }) => {
+const DefaultButton: React.FC<DefaultButtonProps> = ({ children}) => {
   return (
-    <button className={styles.button} style={{ backgroundColor: background }}>
+    <button className={styles.button}>
       {children}
     </button>
   )
 }
 
-export default DefaultButton
+export default DefaultButton;

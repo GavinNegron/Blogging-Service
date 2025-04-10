@@ -35,7 +35,7 @@ export default function Onboarding() {
                 >
                     {step === 0 && <StepOne next={next} />}
                     {step === 1 && <StepTwo next={next} prev={prev} setUsername={setUsername} />}
-                    {step === 2 && <StepThree next={next} prev={prev} username={username} />}
+                    {step === 2 && <StepThree prev={prev} username={username} />}
                 </motion.div>
             </AnimatePresence>
         </div>

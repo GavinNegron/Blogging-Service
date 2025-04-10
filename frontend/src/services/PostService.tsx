@@ -6,7 +6,7 @@ export async function fetchUserPosts(userId: string, limit: number = 5) {
         return response.data;
     } catch (error) {
         console.error('Failed to fetch posts:', error);
-        throw new Error('Failed to fetch posts.');
+        return { success: false, message: 'Failed to fetch posts. Please try again later.' };
     }
 }
 
@@ -16,6 +16,6 @@ export async function deleteUserPosts(userId: string, postIds: string[]) {
         return response.data;
     } catch (error) {
         console.error('Failed to delete posts:', error);
-        throw new Error('Failed to delete posts.');
+        return { success: false, message: 'Failed to delete posts. Please try again later.' };
     }
 }

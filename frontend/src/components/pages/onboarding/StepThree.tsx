@@ -3,18 +3,16 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 
 interface StepProps {
-  next: () => void;
   prev: () => void;
   username: string;
 }
 
-export default function StepThree({ next, prev, username }: StepProps) {
+export default function StepThree({ prev, username }: StepProps) {
   const [domainOption, setDomainOption] = useState<"subdomain" | "custom">("subdomain");
-  const [customDomain, setCustomDomain] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const isValid = domainOption === "subdomain" || (domainOption === "custom" && customDomain.length > 0);
+  const isValid = domainOption === "subdomain" || (domainOption === "custom");
   const displayUsername = username || "yourblog";
 
   const completeOnboarding = async () => {

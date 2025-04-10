@@ -14,7 +14,7 @@ const NavbarAuth: React.FC<NavbarAuthProps> = ({ type }) => {
       <div className={styles.navbar__item}>
         {type === 'login' ? (
           <>
-            <span>Don't have an account?</span>
+            <span>{"Don't have an account?"}</span>
             <a href="/register">Sign Up now!</a>
           </>
         ) : (

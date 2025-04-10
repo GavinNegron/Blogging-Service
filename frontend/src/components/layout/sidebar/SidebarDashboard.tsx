@@ -1,13 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import "./SidebarDashboard.sass";
 
 function Sidebar() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
     setSidebarCollapsed(window.innerWidth <= 1109);

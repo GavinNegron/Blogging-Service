@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, lazy } from 'react';
+import { useState, lazy } from 'react';
 import Link from 'next/link';
 import Checkbox from '../../../components/ui/checkbox';
 import Search from '../../../components/ui/search';
@@ -9,6 +9,7 @@ import { usePostContext } from '@/contexts/PostContext';
 import './dashboard-blog.sass';
 
 const DeletePost = lazy(() => import('@/components/popups/dashboard/DeletePost'));
+const CreatePost = lazy(() => import('@/components/popups/dashboard/CreatePost'));
 
 interface Post {
   id: string;
@@ -25,7 +26,7 @@ interface BlogClientPageProps {
 }
 
 export default function BlogClientPage({ posts = [] }: BlogClientPageProps) {
-  const { handleSelectPost, selectedPosts } = usePostContext();
+  const { handleSelectPost } = usePostContext();
 
   const { togglePopup } = usePopup();
 
@@ -69,7 +70,7 @@ export default function BlogClientPage({ posts = [] }: BlogClientPageProps) {
               
               <div className="dashboard__new-post">
                 <div className="dashboard__new-post-item">
-                  <Link href="#new-post">
+                  <Link href="#new-post" onClick={() => togglePopup('createPost', true)}>
                     <i className="fa-solid fa-plus"></i>
                     <span>New Post</span>
                   </Link>
@@ -125,6 +126,7 @@ export default function BlogClientPage({ posts = [] }: BlogClientPageProps) {
       </div>
       {/* ----- POPUP COMPONENTS ----- */}
       <DeletePost/>
+      <CreatePost/>
     </>
   );
 };

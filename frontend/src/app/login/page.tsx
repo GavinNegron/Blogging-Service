@@ -6,6 +6,7 @@ import { NavbarAuth } from '@/components/layout/navbar/index';
 import GoogleLoginButton from '@/components/ui/buttons/google/GoogleLogin';
 import { authClient } from '@/utils/auth-client';
 import './login.sass';
+import ErrorBox from '@/components/ui/ErrorBox';
 
 export default function Page() {
     const [email, setEmail] = useState('');
@@ -53,7 +54,7 @@ export default function Page() {
                                 <h1>Login</h1>
                             </div>
                             <form className="login__form" onSubmit={handleSubmit}>
-                                {error && <p className="login__form__error"><i className="fa-solid fa-hexagon-exclamation"></i>{error}</p>}
+                                {error && <ErrorBox>{error}</ErrorBox>}
                                 <span className='login__form-span'>Enter email:</span>
                                 <input
                                     type="email"

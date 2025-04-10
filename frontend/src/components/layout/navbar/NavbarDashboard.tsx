@@ -4,10 +4,12 @@ import Link from 'next/link';
 import styles from './NavbarDashboard.module.sass';
 
 interface DashboardProps {
-  session: any;
+  session: { user: { image?: string | null } } | null;
 }
 
 const NavbarDashboard = ({ session }: DashboardProps) => {
+  const imageUrl = session?.user?.image || "/user.jpeg";
+
   return (
     <div className={styles.navbar}>
       <div className={styles.navbar__top}>
@@ -20,7 +22,7 @@ const NavbarDashboard = ({ session }: DashboardProps) => {
           <div className={`${styles.navbar__top__item} d-flex`}>
             <button>
               <div className={`${styles.navbar__profile} d-flex`}>
-                <img src={session?.user?.image || "/user.jpeg"} draggable="false" alt="User Profile" />
+                <img src={imageUrl} draggable="false" alt="User Profile" />
               </div>
             </button>
           </div>
