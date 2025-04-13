@@ -1,8 +1,11 @@
 import React from 'react';
+import { authClient } from '@/utils/auth-client';
 import './styles.sass';
 
 const handleGoogleLogin = async () => {
-  
+  authClient.signIn.social({
+    provider: "google"
+  });
 };
 
 const GoogleLoginButton = () => { 

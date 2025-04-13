@@ -1,14 +1,17 @@
-"use client"
 
-import React from 'react'
+import React, { Suspense } from "react";
+import Loading from "./loading"; 
 
-export default function PostsPage() {
-
+export default async function PostsPage() {
   return (
-    <div className="dashboard__header">
-      <div className="dashboard__header-item">
-        <span>Dashboard</span>
+    <Suspense fallback={<Loading />}>
+      <div className="dashboard__content d-flex flex-col">
+        <div className="dashboard__banner">
+          <div className="dashboard__banner-header">
+            <span>Dashboard</span>
+          </div>
+        </div>
       </div>
-    </div>
-  )
+    </Suspense>
+  );
 }

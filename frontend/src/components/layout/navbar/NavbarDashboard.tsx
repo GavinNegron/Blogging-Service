@@ -2,12 +2,11 @@
 
 import Link from 'next/link';
 import styles from './NavbarDashboard.module.sass';
+import Image from 'next/image';
+import { useAuthContext } from '@/contexts/AuthContext';
 
-interface DashboardProps {
-  session: { user: { image?: string | null } } | null;
-}
-
-const NavbarDashboard = ({ session }: DashboardProps) => {
+const NavbarDashboard = () => {
+  const { session } = useAuthContext();
   const imageUrl = session?.user?.image || "/user.jpeg";
 
   return (
@@ -22,7 +21,7 @@ const NavbarDashboard = ({ session }: DashboardProps) => {
           <div className={`${styles.navbar__top__item} d-flex`}>
             <button>
               <div className={`${styles.navbar__profile} d-flex`}>
-                <img src={imageUrl} draggable="false" alt="User Profile" />
+                <Image width={35} height={35} src={imageUrl} draggable="false" alt="User Profile" referrerPolicy="no-referrer" />
               </div>
             </button>
           </div>

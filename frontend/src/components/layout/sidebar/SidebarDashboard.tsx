@@ -1,118 +1,101 @@
-"use client";
+"use client"
 
-import React, { useState, useEffect } from "react";
-import Link from "next/link";
-import "./SidebarDashboard.sass";
+import React, { useState, useEffect } from "react"
+import Link from "next/link"
+import Image from "next/image"
+import { usePathname } from "next/navigation"
+import { useAuthContext } from "@/contexts/AuthContext"
+import "./SidebarDashboard.sass"
 
 function Sidebar() {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const { user, blog } = useAuthContext();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const [textVisible, setTextVisible] = useState(true)
+  const pathname = usePathname()
 
   useEffect(() => {
-    setSidebarCollapsed(window.innerWidth <= 1109);
+    const initialCollapsed = window.innerWidth <= 1109
+    setSidebarCollapsed(initialCollapsed)
+    setTextVisible(!initialCollapsed)
 
     const handleResize = () => {
-      setSidebarCollapsed(window.innerWidth <= 1109);
-    };
+      const shouldCollapse = window.innerWidth <= 1109
+      setSidebarCollapsed(shouldCollapse)
+      setTextVisible(!shouldCollapse)
+    }
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize)
     return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+      window.removeEventListener("resize", handleResize)
+    }
+  }, [])
 
   useEffect(() => {
-    document.body.classList.toggle("SidebarActive", sidebarCollapsed);
-  }, [sidebarCollapsed]);
+    document.body.classList.toggle("SidebarActive", sidebarCollapsed)
+  }, [sidebarCollapsed])
 
   const toggleSidebarState = () => {
-    setSidebarCollapsed((prevState) => !prevState);
-  };
+    setSidebarCollapsed(prevState => !prevState)
+    if (sidebarCollapsed) {
+      setTimeout(() => setTextVisible(true), 50)
+    } else {
+      setTextVisible(false)
+    }
+  }
 
-  const handleLogout = async () => {
-   
-  };
+  const isActive = (href: string) => {
+    const normalize = (s: string) => s.replace(/\/+$/, "")
+    return normalize(pathname) === normalize(href)
+  }
+
+  const imageUrl = user?.image || '/user.jpeg';
 
   return (
     <aside className={`sidebar no-select ${sidebarCollapsed ? "collapsed" : ""}`}>
-      <div className="sidebar__top d-flex align-items-center">
-        <div className="sidebar__top-logo">
-          <Link href="/" draggable="false" className="sidebar__top-logo-name">User Dashboard</Link>
-          <div className="sidebar__top-logo-img">
-            <img draggable='false' src="/placeholder.png" alt="Placeholder Logo" />
-          </div>
+      <div className="sidebar__top-arrow" onClick={toggleSidebarState}>
+        <i className={`fa-solid ${sidebarCollapsed ? "fa-chevron-right" : "fa-chevron-left"}`} style={{ color: "#ffffff" }}></i>
+      </div>
+      <div className="sidebar__banner">
+        <div className="sidebar__banner__image">
+          <Image src={imageUrl} width='40' height='40' alt="logo" />
         </div>
-        <div className="sidebar__top-arrow" onClick={toggleSidebarState}>
-          <i className={`fa-solid ${sidebarCollapsed ? "fa-chevron-right" : "fa-chevron-left"}`} style={{ color: "#ffffff" }}></i>
+        <div className="sidebar__banner__content">
+          <div className={`sidebar__banner__name ${textVisible ? "visible" : "hidden"}`}>
+            <span>{blog?.name}</span>
+          </div>
+          <div className="sidebar__banner__email">
+            <span>{user?.email}</span>
+          </div>
         </div>
       </div>
       <div className="sidebar__links">
-        <Link href="/dashboard/" className="sidebar__links-item" draggable="false">
-          <div className="sidebar__links-item-icon">
-            <i className="fa-solid fa-chart-line" style={{ color: "#ffffff" }}></i>
-          </div>
-          <div className="sidebar__links-item-text">Home</div>
+        <Link href="/dashboard/" className={`sidebar__links-item ${isActive("/dashboard") ? "active" : ""}`} draggable="false">
+          <i className="fa-solid fa-chart-line sidebar__links__icon" style={{ color: "#ffffff" }}></i>
+          <span className={`sidebar__links__text ${textVisible ? "visible" : "hidden"}`}>Home</span>
         </Link>
-
-        <Link href="/dashboard/blog" className="sidebar__links-item" draggable="false">
-          <div className="sidebar__links-item-icon">
-            <i className="fa-solid fa-newspaper" style={{ color: "#ffffff" }}></i>
-          </div>
-          <div className="sidebar__links-item-text">Blog</div>
+        <Link href="/dashboard/blog" className={`sidebar__links-item ${isActive("/dashboard/blog") ? "active" : ""}`} draggable="false">
+          <i className="fa-solid fa-newspaper sidebar__links__icon" style={{ color: "#ffffff" }}></i>
+          <span className={`sidebar__links__text ${textVisible ? "visible" : "hidden"}`}>Blog</span>
         </Link>
-
-        <Link href="/dashboard/authors" className="sidebar__links-item" draggable="false">
-          <div className="sidebar__links-item-icon">
-            <i className="fa-solid fa-users" style={{ color: "#ffffff" }}></i>
-          </div>
-          <div className="sidebar__links-item-text">Authors</div>
+        <Link href="/dashboard/authors" className={`sidebar__links-item ${isActive("/dashboard/authors") ? "active" : ""}`} draggable="false">
+          <i className="fa-solid fa-users sidebar__links__icon" style={{ color: "#ffffff" }}></i>
+          <span className={`sidebar__links__text ${textVisible ? "visible" : "hidden"}`}>Authors</span>
         </Link>
-
-        <Link href="/dashboard/messages" className="sidebar__links-item" draggable="false">
-          <div className="sidebar__links-item-icon">
-            <i className="fa-solid fa-envelope" style={{ color: "#ffffff" }}></i>
-          </div>
-          <div className="sidebar__links-item-text">Messages</div>
+        <Link href="/dashboard/messages" className={`sidebar__links-item ${isActive("/dashboard/messages") ? "active" : ""}`} draggable="false">
+          <i className="fa-solid fa-envelope sidebar__links__icon" style={{ color: "#ffffff" }}></i>
+          <span className={`sidebar__links__text ${textVisible ? "visible" : "hidden"}`}>Messages</span>
         </Link>
-
-        <Link href="/dashboard/logs" className="sidebar__links-item" draggable="false">
-          <div className="sidebar__links-item-icon">
-            <i className="fa-solid fa-file-lines" style={{ color: "#ffffff" }}></i>
-          </div>
-          <div className="sidebar__links-item-text">Logs</div>
+        <Link href="/dashboard/logs" className={`sidebar__links-item ${isActive("/dashboard/logs") ? "active" : ""}`} draggable="false">
+          <i className="fa-solid fa-file-lines sidebar__links__icon" style={{ color: "#ffffff" }}></i>
+          <span className={`sidebar__links__text ${textVisible ? "visible" : "hidden"}`}>Logs</span>
         </Link>
-
-        <Link href="/dashboard/settings" className="sidebar__links-item" draggable="false">
-          <div className="sidebar__links-item-icon">
-            <i className="fa-solid fa-gear" style={{ color: "#ffffff" }}></i>
-          </div>
-          <div className="sidebar__links-item-text">Settings</div>
+        <Link href="/dashboard/settings" className={`sidebar__links-item ${isActive("/dashboard/settings") ? "active" : ""}`} draggable="false">
+          <i className="fa-solid fa-gear sidebar__links__icon" style={{ color: "#ffffff" }}></i>
+          <span className={`sidebar__links__text ${textVisible ? "visible" : "hidden"}`}>Settings</span>
         </Link>
-      </div>
-
-      <div className="sidebar__bottom d-flex align-items-center flex-col">
-        <span className="sidebar__links-line"></span>
-        <div className="sidebar__links-item" id="logout-btn" onClick={handleLogout}>
-          <div className="sidebar__links-item-icon">
-            <i className="fa-solid fa-right-from-bracket" style={{ color: "#ffffff" }}></i>
-          </div>
-          <div className="sidebar__links-item-text">
-            <span>Logout</span>
-          </div>
-        </div>
-        <div className="sidebar__links-item toggle">
-          <div className="sidebar__links-item-icon">
-            <i className="fa-solid fa-moon" style={{ color: "#ffffff" }}></i>
-          </div>
-          <div className="sidebar__links-item-text">
-            <span>Theme</span>
-          </div>
-          <div className="sidebar__links-item-toggle">
-            <i className="fa-solid fa-2xl fa-toggle-on" style={{ color: "#ffffff" }}></i>
-          </div>
-        </div>
       </div>
     </aside>
-  );
+  )
 }
 
-export default Sidebar;
+export default Sidebar

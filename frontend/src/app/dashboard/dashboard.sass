@@ -1,17 +1,27 @@
+body
+  background-color: #1b1c1f
+
 .dashboard
   position: relative
-  left: 300px
   display: flex
   flex-direction: column
-  width: calc( 100vw - 300px )
   height: 100vh
   position: relative
   background-color: #1b1c1f
 
   &__inner
-    top: 50px
     position: relative
-    height: calc(100% - 50px)
+    left: 280px
+    width: calc(100% - 300px)
+    background: #161618
+    border-radius: 5px
+    margin: 10px
+    height: 100%
+    border: solid 1px #232323
+    transition: left 0.3s ease, width 0.3s ease
+
+  &__content
+    margin-top: 42px
 
   &__banner
     display: flex
@@ -26,6 +36,6 @@
     &-header
       font-size: 30px
 
-.sidebar.collapsed + .dashboard
-  left: 78px
-  width: calc(100vw - 78px)
+.sidebar.collapsed + .dashboard__inner
+  left: 88px
+  width: calc(100% - 108px)

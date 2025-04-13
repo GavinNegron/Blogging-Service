@@ -27,6 +27,7 @@ interface BlogClientPageProps {
 
 export default function BlogClientPage({ posts = [] }: BlogClientPageProps) {
   const { handleSelectPost } = usePostContext();
+  
 
   const { togglePopup } = usePopup();
 
@@ -34,7 +35,7 @@ export default function BlogClientPage({ posts = [] }: BlogClientPageProps) {
 
   return (
     <>
-      <div className="dashboard__blog">
+       <div className="dashboard__content d-flex flex-col">
         <div className="dashboard__banner no-select">
           <div className="dashboard__banner-header">
             <span>Manage Posts</span>
@@ -123,10 +124,10 @@ export default function BlogClientPage({ posts = [] }: BlogClientPageProps) {
             <div className='dashboard__blog-grid__no-posts'>No posts found.</div>
           )}
         </div>
-      </div>
+       </div>
       {/* ----- POPUP COMPONENTS ----- */}
-      <DeletePost/>
-      <CreatePost/>
+        <DeletePost/>
+        <CreatePost/>
     </>
   );
 };
