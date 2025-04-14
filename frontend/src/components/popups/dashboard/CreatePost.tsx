@@ -3,6 +3,8 @@ import { usePopup } from '@/contexts/PopupContext'
 import styles from './CreatePost.module.sass'
 import ImageSelector from '@/components/dashboard/ImageSelector'
 import DefaultButton from '@/components/ui/buttons/default/DefaultButton'
+import { createUserPost } from '@/services/PostService'
+import { useAuthContext } from '@/contexts/AuthContext'
 
 export default function CreatePost() {
   const { popups, togglePopup } = usePopup();
@@ -25,6 +27,22 @@ export default function CreatePost() {
     }
   }, [closePopup]);
 
+  const [title, setTitle] = useState('');
+  const [image, setImage] = useState('');
+
+  const { user } = useAuthContext();
+  const userId = user?.id;
+  const handleCreatePost = async () => {
+    if (!userId) return 
+
+    const response = await createUserPost(userId, {
+      title,
+      image
+    });
+
+    console.log(response);
+  }
+
   return (
     <>
       {popups['createPost'] && (
@@ -42,16 +60,22 @@ export default function CreatePost() {
                 )}
                 <div className={styles['popup__content-title']}>
                   <span>Add a title: </span>
-                  <input maxLength={120} type="text" placeholder="Add a title" />
+                  <input
+                    maxLength={120}
+                    type="text"
+                    placeholder="Add a title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                  />
                 </div>
                 <div className={styles['popup__content-image']}>
                   <span>Select Image</span>
                   <div className={styles['popup__content-image__preview']}>
-                    <ImageSelector />
+                    <ImageSelector onSelect={(img: string) => setImage(img)} />
                   </div>
                 </div>
                 <div className={styles['popup__content-submit']}>
-                  <DefaultButton>Create Post</DefaultButton>
+                  <DefaultButton onClick={handleCreatePost}>Create Post</DefaultButton>
                 </div>
               </div>
             </div>

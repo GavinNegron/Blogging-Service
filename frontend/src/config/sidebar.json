@@ -1,0 +1,81 @@
+[
+  {
+    "header": "Home",
+    "collapsable": true,
+    "links": [
+      {
+        "href": "/dashboard/",
+        "icon": "fa-chart-mixed",
+        "text": "Overview"
+      },
+      {
+        "href": "/dashboard/logs",
+        "icon": "fa-wave-pulse",
+        "text": "Activity"
+      }
+    ]
+  },
+  {
+    "header": "Blog",
+    "collapsable": true,
+    "links": [
+      {
+        "href": "/dashboard/blog",
+        "icon": "fa-newspaper",
+        "text": "Blog Posts"
+      },
+      {
+        "href": "/dashboard/pages",
+        "icon": "fa-memo",
+        "text": "Pages"
+      },
+      {
+        "href": "/dashboard/comments",
+        "icon": "fa-comments",
+        "text": "Comments"
+      },
+      {
+        "href": "/dashboard/newsletter",
+        "icon": "fa-envelope-circle-check",
+        "text": "Newsletter"
+      }
+    ]
+  },
+  {
+    "header": "Team",
+    "collapsable": true,
+    "links": [
+      {
+        "href": "/dashboard/team",
+        "icon": "fa-users-cog",
+        "text": "Manage Staff"
+      },
+      {
+        "href": "/dashboard/messages",
+        "icon": "fa-paper-plane-top",
+        "text": "Messages"
+      }
+    ]
+  },
+  {
+    "header": "Account",
+    "collapsable": true,
+    "links": [
+      {
+        "href": "/dashboard/profile",
+        "icon": "fa-user",
+        "text": "Profile"
+      },
+      {
+        "href": "/dashboard/notifications",
+        "icon": "fa-bell",
+        "text": "Notifications"
+      },
+      {
+        "href": "/dashboard/settings",
+        "icon": "fa-gear",
+        "text": "Settings"
+      }
+    ]
+  }
+]

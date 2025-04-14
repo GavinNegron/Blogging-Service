@@ -1,7 +1,17 @@
 import { Request, Response } from 'express';
 import { db } from '../../config/db';
 import { blog, blogPost } from './../../config/schema';
-import { eq, and } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
+
+const generateSlug = (title: string): string => {
+  return title
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')       
+    .replace(/[^a-z0-9-]/g, '')  
+    .replace(/-+/g, '-')          
+    .substring(0, 80);          
+}
 
 class PostController {
   getUserPosts = async (req: Request, res: Response): Promise<void> => {
@@ -41,12 +51,17 @@ class PostController {
   createPost = async (req: Request, res: Response): Promise<void> => {
     try {
       const userId = req.params.id;
-      const { title, slug, status, tags, elements } = req.body;
-
-      if (!title || !slug || !status || !tags || !elements) {
-        res.status(400).json({ success: false, error: "All fields are required." })
-      }
+      let { title, tags, elements } = req.body;
   
+      if (!title) {
+        res.status(400).json({ success: false, error: "All fields are required." })
+        return;
+      }
+
+      if (!elements) {
+        elements = [];
+      }
+      
       const userBlog = await db.select().from(blog).where(eq(blog.userId, userId)).limit(1);
   
       if (userBlog.length === 0) {
@@ -55,13 +70,15 @@ class PostController {
       }
   
       const blogId = userBlog[0].id;
+      
+      const slug = generateSlug(title);
   
       const insertedPost = await db.insert(blogPost).values({
         id: crypto.randomUUID(), 
         blogId,
         title,
         slug,
-        status,
+        status: 'draft',
         tags,
         elements,
         author: userId, 
@@ -81,7 +98,6 @@ class PostController {
       const { id } = req.params;
       const { postIds: rawPostIds } = req.body;
       
-      // Check if postIds is a string/array
       let postIds: string[] = [];
       if (typeof rawPostIds === 'string') {
         postIds = JSON.parse(rawPostIds);
@@ -97,6 +113,7 @@ class PostController {
       // Select the users blog
       const userBlog = await db.select().from(blog).where(eq(blog.id, id)).limit(1);
       if (userBlog.length === 0) {
+        console.log(`THIS IS THE IDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD: ${id}`)
         res.status(404).json({ success: false, error: 'Blog not found for this user.' });
         return;
       }

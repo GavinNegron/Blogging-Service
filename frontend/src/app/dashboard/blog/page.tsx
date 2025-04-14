@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default async function PostsPage() {
   const cookieHeader = (await cookies()).toString();
-  await new Promise((resolve) => setTimeout(resolve, 250));
+  await new Promise((resolve) => setTimeout(resolve, 150));
 
 
   const session = await api.get('/api/auth/get-session', {

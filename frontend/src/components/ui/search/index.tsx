@@ -2,8 +2,8 @@ import React from "react";
 import './styles.sass';
 
 type SearchProps = {
-    value: string;
-    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    value?: string;
+    onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 const Search: React.FC<SearchProps> = ({ value, onChange }) => {

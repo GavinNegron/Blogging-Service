@@ -14,6 +14,7 @@ interface Session {
 }
 
 interface Blog {
+  id: string;
   name: string;
 }
 
@@ -38,7 +39,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
     setIsLoading(false);
 
-    setBlog({ name: "Error loading blog" });
+    setBlog({ id: '1234', name: "Error loading blog" });
   }, [session]);
 
   return (

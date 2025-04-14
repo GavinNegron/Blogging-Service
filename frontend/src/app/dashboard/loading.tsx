@@ -7,7 +7,7 @@ export default function Loading() {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        position: 'relative',
+        position: 'absolute',
         top: 0,
         left: 0,
         width: '100%',

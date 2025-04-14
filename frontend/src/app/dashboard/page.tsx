@@ -6,7 +6,7 @@ export default async function PostsPage() {
   return (
     <Suspense fallback={<Loading />}>
       <div className="dashboard__content d-flex flex-col">
-        <div className="dashboard__banner">
+        <div className="dashboard__banner no-select">
           <div className="dashboard__banner-header">
             <span>Dashboard</span>
           </div>

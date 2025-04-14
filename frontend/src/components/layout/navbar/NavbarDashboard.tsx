@@ -12,7 +12,7 @@ const NavbarDashboard = () => {
   return (
     <div className={styles.navbar}>
       <div className={styles.navbar__top}>
-        <div className={styles.navbar__top__inner}>
+        <div className={`${styles.navbar__top__inner} no-select`}>
           <div className={styles.navbar__top__item}>
             <span>
               <Link href='/dashboard'>PLACEHOLDER</Link>

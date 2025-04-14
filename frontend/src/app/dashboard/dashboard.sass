@@ -1,27 +1,29 @@
 body
   background-color: #1b1c1f
+  margin: 0
 
 .dashboard
   position: relative
   display: flex
   flex-direction: column
-  height: 100vh
-  position: relative
+  min-height: 100vh
   background-color: #1b1c1f
 
   &__inner
     position: relative
     left: 280px
     width: calc(100% - 300px)
+    min-height: 100vh
     background: #161618
     border-radius: 5px
     margin: 10px
-    height: 100%
     border: solid 1px #232323
     transition: left 0.3s ease, width 0.3s ease
 
   &__content
     margin-top: 42px
+    flex: 1
+    min-height: 0
 
   &__banner
     display: flex
