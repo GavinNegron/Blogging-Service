@@ -1,58 +1,59 @@
-'use client';
+'use client'
 
-import { usePopup } from '@/contexts/PopupContext';
-import { deleteUserPosts } from '@/services/PostService';
-import { usePostContext } from '@/contexts/PostContext';
-import { useAuthContext } from '@/contexts/AuthContext';
-import styles from './DeletePost.module.sass';
-import { useState } from 'react';
-import ErrorBox from '@/components/ui/ErrorBox';
+import { usePopup } from '@/contexts/PopupContext'
+import { deleteUserPosts } from '@/services/PostService'
+import { usePostContext } from '@/contexts/PostContext'
+import { useAuthContext } from '@/contexts/AuthContext'
+import styles from './DeletePost.module.sass'
+import { useState } from 'react'
+import ErrorBox from '@/components/ui/ErrorBox'
 
 interface Post {
-  id: string;
-  title: string;
-  slug: string;
-  imageUrl: string;
-  status: string;
-  views: number;
-  createdAt: string;
+  id: string
+  title: string
+  slug: string
+  imageUrl: string
+  status: string
+  views: number
+  createdAt: string
 }
 
 interface DeletePostProps {
-  setPosts: React.Dispatch<React.SetStateAction<Post[]>>;
+  setPosts: React.Dispatch<React.SetStateAction<Post[]>>
+  setSelectedPosts: React.Dispatch<React.SetStateAction<string[]>>
 }
 
-export default function DeletePost({ setPosts }: DeletePostProps) {
-  const { selectedPosts } = usePostContext();
-  const { blog } = useAuthContext();
-  const { popups, togglePopup } = usePopup();
-  const [error, setError] = useState<string | undefined>();
+export default function DeletePost({ setPosts, setSelectedPosts }: DeletePostProps) {
+  const { selectedPosts } = usePostContext()
+  const { blog } = useAuthContext()
+  const { popups, togglePopup } = usePopup()
+  const [error, setError] = useState<string | undefined>()
 
   const closePopup = () => {
-    togglePopup('deletePost', false);
-  };
+    togglePopup('deletePost', false)
+  }
 
   const handleDeletePosts = async () => {
     if (!blog?.id) {
-      setError('Failed to delete post(s). Please try again later.');
-      return;
+      setError('Failed to delete post(s). Please try again later.')
+      return
     }
 
     try {
-      const response = await deleteUserPosts(blog.id, selectedPosts);
+      const response = await deleteUserPosts(blog.id, selectedPosts)
 
       if (response.success === true) {
-        // Filter out the deleted posts from the state directly
-        setPosts(prevPosts => prevPosts.filter(post => !selectedPosts.includes(post.id)));
-        closePopup();
+        setPosts(prevPosts => prevPosts.filter(post => !selectedPosts.includes(post.id)))
+        setSelectedPosts([])
+        closePopup()
       } else {
-        setError("Failed to delete post(s). Please try again later.");
+        setError('Failed to delete post(s). Please try again later.')
       }
     } catch (error) {
-      console.error(error);
-      setError("Failed to delete post(s). Please try again later.");
+      console.error(error)
+      setError('Failed to delete post(s). Please try again later.')
     }
-  };
+  }
 
   return (
     <>
@@ -73,5 +74,5 @@ export default function DeletePost({ setPosts }: DeletePostProps) {
         </div>
       )}
     </>
-  );
+  )
 }

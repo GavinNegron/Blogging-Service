@@ -1,54 +1,54 @@
-'use client'
+'use client';
 
-import { useEffect, useState, lazy } from 'react'
-import Link from 'next/link'
-import Checkbox from '@/components/ui/checkbox'
-import Search from '@/components/ui/search'
-import { usePopup } from '@/contexts/PopupContext'
-import { usePostContext } from '@/contexts/PostContext'
-import './dashboard-blog.sass'
-import DefaultButton from '@/components/ui/buttons/default/DefaultButton'
+import { useEffect, useState, lazy } from 'react';
+import Link from 'next/link';
+import Checkbox from '@/components/ui/checkbox';
+import Search from '@/components/ui/search';
+import { usePopup } from '@/contexts/PopupContext';
+import { usePostContext } from '@/contexts/PostContext';
+import './dashboard-blog.sass';
+import DefaultButton from '@/components/ui/buttons/default/DefaultButton';
 
-const DeletePost = lazy(() => import('@/components/popups/dashboard/DeletePost'))
-const CreatePost = lazy(() => import('@/components/popups/dashboard/CreatePost'))
+const DeletePost = lazy(() => import('@/components/popups/dashboard/DeletePost'));
+const CreatePost = lazy(() => import('@/components/popups/dashboard/CreatePost'));
 
 interface Post {
-  id: string
-  title: string
-  slug: string
-  imageUrl: string
-  status: string
-  views: number
-  createdAt: string
+  id: string;
+  title: string;
+  slug: string;
+  imageUrl: string;
+  status: string;
+  views: number;
+  createdAt: string;
 }
 
 interface BlogClientPageProps {
-  posts: Post[]
+  posts: Post[];
 }
 
 export default function BlogClientPage({ posts: initialPosts = [] }: BlogClientPageProps) {
-  const { selectedPosts, setSelectedPosts, handleSelectPost } = usePostContext()
-  const { togglePopup } = usePopup()
+  const { selectedPosts, setSelectedPosts, handleSelectPost } = usePostContext();
+  const { togglePopup } = usePopup();
 
-  const [searchQuery, setSearchQuery] = useState('')
-  const [posts, setPosts] = useState<Post[]>(initialPosts)
+  const [searchQuery, setSearchQuery] = useState('');
+  const [posts, setPosts] = useState<Post[]>(initialPosts);
 
-  const areAllSelected = posts.length > 0 && posts.every(post => selectedPosts.includes(post.id))
+  const areAllSelected = posts.length > 0 && posts.every(post => selectedPosts.includes(post.id));
 
   const toggleSelectAll = () => {
     if (areAllSelected) {
-      setSelectedPosts([])
+      setSelectedPosts([]);
     } else {
-      setSelectedPosts(posts.map(post => post.id))
+      setSelectedPosts(posts.map(post => post.id));
     }
-  }
+  };
 
   useEffect(() => {
-    const modifySection = document.querySelector('.dashboard__modify') as HTMLElement
+    const modifySection = document.querySelector('.dashboard__modify') as HTMLElement;
     if (modifySection) {
-      modifySection.style.display = selectedPosts.length > 0 ? 'flex' : 'none'
+      modifySection.style.display = selectedPosts.length > 0 ? 'flex' : 'none';
     }
-  }, [selectedPosts])
+  }, [selectedPosts]);
 
   return (
     <>
@@ -142,8 +142,8 @@ export default function BlogClientPage({ posts: initialPosts = [] }: BlogClientP
                   <button
                     className="dashboard__icon--delete"
                     onClick={() => {
-                      setSelectedPosts([post.id])
-                      togglePopup('deletePost', true)
+                      setSelectedPosts([post.id]);
+                      togglePopup('deletePost', true);
                     }}
                   >
                     Delete
@@ -170,9 +170,8 @@ export default function BlogClientPage({ posts: initialPosts = [] }: BlogClientP
         </div>
       </div>
 
-      {/* POPUPS */}
-      <DeletePost setPosts={setPosts} />
+      <DeletePost setPosts={setPosts} setSelectedPosts={setSelectedPosts} />
       <CreatePost />
     </>
-  )
+  );
 }

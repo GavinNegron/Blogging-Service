@@ -1,12 +1,13 @@
 import express from "express";
 import PostController from "../controllers/user/PostController";
+import authMiddleware from "../middleware/authMiddleware";
 
-export const app = express.Router()
+const router = express.Router();
 
-app.get('/api/user/:id/blog/posts', PostController.getUserPosts);
+router.get('/api/user/:id/blog/posts', authMiddleware, PostController.getUserPosts);
 
-app.post('/api/user/:id/blog/posts', PostController.createPost);
+router.post('/api/user/:id/blog/posts', authMiddleware, PostController.createPost);
 
-app.delete('/api/user/:id/blog/posts/', PostController.deletePost);
+router.delete('/api/user/:id/blog/posts', authMiddleware, PostController.deletePost);
 
-export default app;
+export default router;

@@ -5,16 +5,14 @@ const nextConfig = {
     domains: ['lh3.googleusercontent.com'],
   },
 
-  async redirects() {
-    const redirects = [];
-    redirects.push({
-      source: '/api/:path*',
-      destination: 'http://localhost:5000/api/:path*',
-      permanent: true,
-    });
-  
-    return redirects;
-  }
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://localhost:8080/api/:path*',
+      },
+    ];
+  },
 };
 
 export default nextConfig;

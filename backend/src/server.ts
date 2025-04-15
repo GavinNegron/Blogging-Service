@@ -12,18 +12,18 @@ import { toNodeHandler } from "better-auth/node";
 import { auth } from "./config/auth";
 
 const app: Application = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 8080;
 
 app.use(cookieParser());
 app.use(morgan('combined'));
 app.use(
   cors({
     origin: "http://localhost:3000",
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], 
-    credentials: true, 
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'], // Added Cookie
+    credentials: true,
   })
 );
-
 app.all("/api/auth/*splat", toNodeHandler(auth));
 
 app.use(rateLimit({
@@ -43,7 +43,6 @@ app.use(helmet.hsts({
 
 app.use(express.json());
 
-app.all("/api/auth/*splat", toNodeHandler(auth));
 
 function loadRoutes(app: Application): void {
   const routesDir = path.resolve(__dirname, './routes');

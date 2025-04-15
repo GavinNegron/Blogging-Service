@@ -25,13 +25,13 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           <main className="main db">
             <div className="dashboard">
               <SidebarDashboard />
-               <Suspense fallback={<Loading/>}>
-               <div className="dashboard__inner">       
+              <Suspense fallback={<Loading/>}>
+                <div className="dashboard__inner">       
                   <NavbarDashboard/>
-                  {children}
+                    {children}
                 </div>
-                </Suspense>
-              </div>
+              </Suspense>
+            </div>
           </main>
         </PostProvider>
       </PopupProvider>
