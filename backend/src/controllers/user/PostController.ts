@@ -113,7 +113,6 @@ class PostController {
       // Select the users blog
       const userBlog = await db.select().from(blog).where(eq(blog.id, id)).limit(1);
       if (userBlog.length === 0) {
-        console.log(`THIS IS THE IDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD: ${id}`)
         res.status(404).json({ success: false, error: 'Blog not found for this user.' });
         return;
       }
