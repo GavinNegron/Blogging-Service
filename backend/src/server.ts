@@ -16,13 +16,11 @@ const port = process.env.PORT || 8080;
 
 app.use(cookieParser());
 app.use(morgan('combined'));
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: "http://localhost:3000",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true,
+}));
 app.all("/api/auth/*splat", toNodeHandler(auth));
 
 app.use(rateLimit({

@@ -1,16 +1,22 @@
 'use client'
 
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useState, ReactNode } from 'react'
 
-const PostContext = createContext<any>(null)
+type PostContextType = {
+  selectedPosts: string[]
+  setSelectedPosts: React.Dispatch<React.SetStateAction<string[]>>
+  handleSelectPost: (postId: string) => void
+}
 
-export const PostProvider = ({ children }: { children: React.ReactNode }) => {
+const PostContext = createContext<PostContextType | undefined>(undefined)
+
+export const PostProvider = ({ children }: { children: ReactNode }) => {
   const [selectedPosts, setSelectedPosts] = useState<string[]>([])
 
   const handleSelectPost = (postId: string) => {
-    setSelectedPosts((prev) =>
+    setSelectedPosts(prev =>
       prev.includes(postId)
-        ? prev.filter((id) => id !== postId)
+        ? prev.filter(id => id !== postId)
         : [...prev, postId]
     )
   }

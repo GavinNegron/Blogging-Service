@@ -91,7 +91,7 @@ export default function Register() {
           }
         }
       })
-    } catch (error) {
+    } catch {
       setErrors((prevErrors) => ({
         ...prevErrors,
         form: "An error occurred, please try again later."

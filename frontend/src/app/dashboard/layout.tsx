@@ -28,7 +28,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               <Suspense fallback={<Loading/>}>
                 <div className="dashboard__inner">       
                   <NavbarDashboard/>
-                    {children}
+                    <div className="dashboard__content">{children}</div>
                 </div>
               </Suspense>
             </div>

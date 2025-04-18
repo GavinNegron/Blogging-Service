@@ -1,0 +1,39 @@
+[
+    {
+      "items": [
+        {
+          "label": "View Profile",
+          "href": "/dashboard/account/profile",
+          "icon": "fa-user"
+        },
+        {
+          "label": "Account Settings",
+          "href": "/dashboard/account/settings",
+          "icon": "fa-cog"
+        }
+      ]
+    },
+    {
+      "items": [
+        {
+          "label": "Change Log",
+          "href": "/change-log/latest",
+          "icon": "fa-clipboard-list"
+        },
+        {
+          "label": "Support",
+          "href": "/support",
+          "icon": "fa-life-ring"
+        }
+      ]
+    },
+    {
+      "items": [
+        {
+          "label": "Log Out",
+          "href": "/dashboard/account/logout",
+          "icon": "fa-right-from-bracket"
+        }
+      ]
+    }
+  ]

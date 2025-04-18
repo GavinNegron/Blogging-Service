@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import Image from 'next/image'
 
 interface ImageSelectorProps {
   onSelect?: (imageUrl: string) => void
@@ -19,7 +20,7 @@ export default function ImageSelector({ onSelect }: ImageSelectorProps) {
 
   return (
     <>
-      <img
+      <Image
         width={'100'}
         height={'100'}
         src={previewImage}

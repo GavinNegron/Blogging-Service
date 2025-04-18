@@ -23,7 +23,7 @@ export default async function PostsPage() {
     return <p>Error: Unauthorized</p>
   }
 
-  const posts = await fetchUserPosts(userId, 5, cookieHeader)
+  await fetchUserPosts(userId, 5, cookieHeader)
 
-  return <ClientPage posts={posts} />
+  return <ClientPage/>
 }

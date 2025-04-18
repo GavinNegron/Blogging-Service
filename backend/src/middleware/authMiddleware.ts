@@ -10,9 +10,8 @@ const authMiddleware = async (
   const session = await auth.api.getSession({
     headers: fromNodeHeaders(req.headers),
   });
-  console.log(fromNodeHeaders(req.headers))
   if (!session) {
-    res.status(400).json({
+    res.status(401).json({
       message: "unauthorized",
     });
     return;

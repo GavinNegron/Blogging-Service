@@ -9,7 +9,7 @@
         "text": "Overview"
       },
       {
-        "href": "/dashboard/logs",
+        "href": "/dashboard/activity",
         "icon": "fa-wave-pulse",
         "text": "Activity"
       }
@@ -25,19 +25,19 @@
         "text": "Blog Posts"
       },
       {
-        "href": "/dashboard/pages",
+        "href": "/dashboard/blog/pages",
         "icon": "fa-memo",
         "text": "Pages"
       },
       {
-        "href": "/dashboard/comments",
-        "icon": "fa-comments",
-        "text": "Comments"
-      },
-      {
-        "href": "/dashboard/newsletter",
+        "href": "/dashboard/blog/newsletter",
         "icon": "fa-envelope-circle-check",
         "text": "Newsletter"
+      },
+      {
+        "href": "/dashboard/blog/settings",
+        "icon": "fa-screwdriver-wrench",
+        "text": "Blog Settings"
       }
     ]
   },
@@ -46,14 +46,14 @@
     "collapsable": true,
     "links": [
       {
-        "href": "/dashboard/team",
+        "href": "/dashboard/blog/team/o/manage",
         "icon": "fa-users-cog",
-        "text": "Manage Staff"
+        "text": "Manage Team"
       },
       {
-        "href": "/dashboard/messages",
+        "href": "/dashboard/blog/team/o/portal",
         "icon": "fa-paper-plane-top",
-        "text": "Messages"
+        "text": "Admin Portal"
       }
     ]
   },
@@ -62,17 +62,17 @@
     "collapsable": true,
     "links": [
       {
-        "href": "/dashboard/profile",
+        "href": "/dashboard/account/profile",
         "icon": "fa-user",
         "text": "Profile"
       },
       {
-        "href": "/dashboard/notifications",
+        "href": "/dashboard/account/notifications",
         "icon": "fa-bell",
         "text": "Notifications"
       },
       {
-        "href": "/dashboard/settings",
+        "href": "/dashboard/account/settings",
         "icon": "fa-gear",
         "text": "Settings"
       }

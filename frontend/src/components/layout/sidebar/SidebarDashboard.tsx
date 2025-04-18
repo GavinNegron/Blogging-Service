@@ -79,7 +79,7 @@ function Sidebar() {
         </div>
         <div className="sidebar__banner no-select cursor-p">
           <div className="sidebar__banner__image d-flex">
-            <Image draggable="false" src={imageUrl} width={40} height={40} alt="User" />
+            <Image draggable="false" src={imageUrl} width={40} height={40} alt="User Profile Image" />
           </div>
           <div className={`sidebar__banner__content ${textVisible ? "visible" : "hidden"}`}>
             <div className="sidebar__banner__name">

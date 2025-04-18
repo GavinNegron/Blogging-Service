@@ -46,13 +46,19 @@ export default function BlogClientPage({ posts: initialPosts = [] }: BlogClientP
   useEffect(() => {
     const modifySection = document.querySelector('.dashboard__modify') as HTMLElement;
     if (modifySection) {
-      modifySection.style.display = selectedPosts.length > 0 ? 'flex' : 'none';
+      const shouldShow = selectedPosts.length > 0
+      modifySection.style.display = shouldShow ? 'flex' : 'none'
+      
+      // Scroll the container into view when opened
+      if (shouldShow) {
+        modifySection.scrollIntoView({ behavior: 'smooth' })
+      }
     }
-  }, [selectedPosts]);
-
+  }, [selectedPosts])
+  
   return (
     <>
-      <div className="dashboard__content d-flex flex-col">
+      <div className="d-flex flex-col">
         <div className="dashboard__banner no-select">
           <div className="dashboard__banner-header">
             <span>Manage Posts</span>

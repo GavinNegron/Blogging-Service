@@ -5,6 +5,7 @@ import { authClient } from "@/utils/auth-client";
 
 interface User {
   id: string;
+  name: string;
   email: string;
   image?: string | null;
 }
