@@ -12,6 +12,11 @@
         "href": "/dashboard/activity",
         "icon": "fa-wave-pulse",
         "text": "Activity"
+      },
+      {
+        "href": "/dashboard/account/profile",
+        "icon": "fa-user",
+        "text": "Author Dashboard"
       }
     ]
   },
@@ -46,12 +51,12 @@
     "collapsable": true,
     "links": [
       {
-        "href": "/dashboard/blog/team/o/manage",
+        "href": "/dashboard/blog/team/manage",
         "icon": "fa-users-cog",
         "text": "Manage Team"
       },
       {
-        "href": "/dashboard/blog/team/o/portal",
+        "href": "/dashboard/blog/team/portal",
         "icon": "fa-paper-plane-top",
         "text": "Admin Portal"
       }
@@ -61,11 +66,6 @@
     "header": "Account",
     "collapsable": true,
     "links": [
-      {
-        "href": "/dashboard/account/profile",
-        "icon": "fa-user",
-        "text": "Profile"
-      },
       {
         "href": "/dashboard/account/notifications",
         "icon": "fa-bell",

@@ -39,7 +39,7 @@ app.use(helmet.hsts({
 }));
 
 app.use(express.json());
-
+app.use(express.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
 
 function loadRoutes(app: Application): void {
   const routesDir = path.resolve(__dirname, './routes');
@@ -57,9 +57,6 @@ function loadRoutes(app: Application): void {
 }
 
 loadRoutes(app);
-
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
 
 const server = app.listen(port, () => {
   console.log(`Server up and running on port ${port}`);

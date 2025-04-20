@@ -29,7 +29,7 @@ export default function Page() {
             <span>Sign up now and start building your blog with ease. No coding needed—just choose a template and start publishing your content.</span>
           </div>
           <div className="cta__image">
-            <img src="/dashboard.svg" alt="Dashboard Image" />
+            <img src="/assets/dashboard.svg" alt="Dashboard Image" />
           </div>
         </section>
      

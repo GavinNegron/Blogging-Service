@@ -66,7 +66,7 @@ function Sidebar() {
     return normalize(pathname) === normalize(href);
   };
 
-  const imageUrl = user?.image || "/user.jpeg";
+  const imageUrl = user?.image || "/assets/user.jpeg";
 
   return (
     <aside className={`sidebar no-select ${sidebarCollapsed ? "collapsed" : ""}`}>

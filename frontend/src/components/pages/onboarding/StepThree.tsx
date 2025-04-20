@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import api from "@/utils/axios.config";
+import { completeOnboarding } from "@/services/AccountService";
 
 interface StepProps {
   prev: () => void;
@@ -13,24 +15,22 @@ export default function StepThree({ prev, username }: StepProps) {
   const router = useRouter();
 
   const isValid = domainOption === "subdomain" || (domainOption === "custom");
-  const displayUsername = username || "yourblog";
 
-  const completeOnboarding = async () => {
+  const handleCompleteOnboarding = async () => {
     try {
       setLoading(true);
-      const res = await fetch("/api/user/onboarding/complete", {
-        method: "POST",
+
+      const cookieHeader = document.cookie;
+
+      const session = await api.get('/api/auth/get-session', {
         headers: {
-          "Content-Type": "application/json",
+          cookie: cookieHeader,
         },
-        body: JSON.stringify({ username }),
       });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Failed to complete onboarding");
-      }
+    
+      const userId = session.data?.user?.id
+      
+      await completeOnboarding(userId, cookieHeader, username);
 
       router.push('/dashboard');
     } catch (error) {
@@ -85,14 +85,14 @@ export default function StepThree({ prev, username }: StepProps) {
             onClick={() => setDomainOption("subdomain")}
           >
             <h2><i className="fas fa-globe"></i> Subdomain</h2>
-            <p>{displayUsername}.domain.com</p>
+            <p>{username || 'yourblog'}.domain.com</p>
           </div>
           <div
             className={`onboarding__domain-option ${domainOption === "custom" ? "selected" : ""}`}
             onClick={() => setDomainOption("custom")}
           >
             <h2><i className="fas fa-certificate"></i> Custom Domain</h2>
-            <p>{displayUsername}.com</p>
+            <p>{username || 'yourblog'}.com</p>
             <span className="premium-feature">Premium</span>
           </div>
         </motion.div>
@@ -105,7 +105,7 @@ export default function StepThree({ prev, username }: StepProps) {
           <button onClick={prev} className="onboarding__button back">
             <i className="fas fa-arrow-left"></i> <span>Back</span>
           </button>
-          <button onClick={completeOnboarding} className="onboarding__button next" disabled={!isValid || loading}>
+          <button onClick={handleCompleteOnboarding} className="onboarding__button next" disabled={!isValid || loading}>
             <span>{loading ? "Finishing..." : "Finish"}</span> <i className="fas fa-arrow-right"></i>
           </button>
         </motion.div>

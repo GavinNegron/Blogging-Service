@@ -7,7 +7,7 @@ export default async function PostsPage() {
     <Suspense fallback={<Loading />}>
       <div className="dashboard__banner no-select">
         <div className="dashboard__banner-header">
-          <span>Dashboard</span>
+          <span>Dashboard Overview</span>
         </div>
       </div>
     </Suspense>

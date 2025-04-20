@@ -6,8 +6,8 @@ import Checkbox from '@/components/ui/checkbox';
 import Search from '@/components/ui/search';
 import { usePopup } from '@/contexts/PopupContext';
 import { usePostContext } from '@/contexts/PostContext';
-import './dashboard-blog.sass';
 import DefaultButton from '@/components/ui/buttons/default/DefaultButton';
+import './styles.sass';
 
 const DeletePost = lazy(() => import('@/components/popups/dashboard/DeletePost'));
 const CreatePost = lazy(() => import('@/components/popups/dashboard/CreatePost'));
@@ -49,7 +49,6 @@ export default function BlogClientPage({ posts: initialPosts = [] }: BlogClientP
       const shouldShow = selectedPosts.length > 0
       modifySection.style.display = shouldShow ? 'flex' : 'none'
       
-      // Scroll the container into view when opened
       if (shouldShow) {
         modifySection.scrollIntoView({ behavior: 'smooth' })
       }
@@ -130,7 +129,7 @@ export default function BlogClientPage({ posts: initialPosts = [] }: BlogClientP
                 <div className="dashboard__blog-grid-image">
                   <a href={`/dashboard/blog/edit/${post.slug}`}>
                     <img
-                      src={post.imageUrl || '/placeholder.png'}
+                      src={post.imageUrl || '/assets/placeholder.png'}
                       alt={post.title || 'Post image'}
                     />
                   </a>

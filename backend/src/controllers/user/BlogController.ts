@@ -4,6 +4,38 @@ import { blog, user } from '../../config/schema';
 import { eq } from 'drizzle-orm';
 
 class BlogController {
+  getUserBlog = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { id: userId } = req.params;
+  
+      const userExists = await db.select().from(user).where(eq(user.id, userId)).execute();
+  
+      if (!userExists || userExists.length === 0) {
+        res.status(404).json({ error: "User not found." });
+        return;
+      }
+  
+      const userBlog = await db
+        .select({ onboardingComplete: user.onboardingComplete })
+        .from(user)
+        .where(eq(user.id, userId))
+        .execute();
+  
+      if (userBlog.length === 0) {
+        res.status(404).json({ error: "User not found." });
+        return;
+      }
+  
+      res.status(200).json({
+        onboardingComplete: userBlog[0].onboardingComplete
+      });
+  
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Failed to get user blog details." });
+    }
+  };
+  
   createUserBlog = async (req: Request, res: Response): Promise<void> => {
     const { blogName, description } = req.body || {};
     const { id: userId } = req.params;

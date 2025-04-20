@@ -9,7 +9,7 @@ import { PopupProvider } from "@/contexts/PopupContext";
 import { PostProvider } from "@/contexts/PostContext";
 import { AuthProvider } from '@/contexts/AuthContext';
 import Loading from './loading';
-import "./dashboard.sass";
+import "./styles.sass";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();

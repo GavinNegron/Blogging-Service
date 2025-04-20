@@ -13,7 +13,7 @@ const NavbarDashboard = () => {
   const { togglePopup, popups } = usePopup()
   const { session } = useAuthContext()
 
-  const imageUrl = session?.user?.image || "/user.jpeg"
+  const imageUrl = session?.user?.image || "/assets/user.jpeg"
   const isProfileOpen = popups["dashboardProfile"]
 
   return (

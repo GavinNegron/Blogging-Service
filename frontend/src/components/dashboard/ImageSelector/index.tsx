@@ -7,7 +7,7 @@ interface ImageSelectorProps {
 
 export default function ImageSelector({ onSelect }: ImageSelectorProps) {
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const [previewImage, setPreviewImage] = useState('/placeholder.png')
+  const [previewImage, setPreviewImage] = useState('/assets/placeholder.png')
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
