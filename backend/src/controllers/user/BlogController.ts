@@ -16,31 +16,38 @@ class BlogController {
       }
   
       const userBlog = await db
-        .select({ onboardingComplete: user.onboardingComplete })
+        .select({
+          onboardingComplete: user.onboardingComplete,
+          blogName: blog.blogName,
+          description: blog.description,
+        })
         .from(user)
+        .innerJoin(blog, eq(blog.userId, user.id)) // Added join condition
         .where(eq(user.id, userId))
         .execute();
   
       if (userBlog.length === 0) {
-        res.status(404).json({ error: "User not found." });
+        res.status(404).json({ error: "Blog not found for the user." });
         return;
       }
   
       res.status(200).json({
-        onboardingComplete: userBlog[0].onboardingComplete
+        onboardingComplete: userBlog[0].onboardingComplete,
+        blogName: userBlog[0].blogName,
+        description: userBlog[0].description,
       });
-  
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Failed to get user blog details." });
     }
   };
   
+  
   createUserBlog = async (req: Request, res: Response): Promise<void> => {
-    const { blogName, description } = req.body || {};
+    let { blogName, description } = req.body || {};
     const { id: userId } = req.params;
 
-    if (!blogName || !description) {
+    if (!blogName) {
       res.status(400).json({ error: "All fields are required."});
       return;
     }
@@ -52,6 +59,8 @@ class BlogController {
         res.status(404).json({ error: "User not found." });
         return;
        }
+
+       if (!description) description = "No description provided for this blog.";
 
        const newBlog = await db.insert(blog).values({
         id: userId,

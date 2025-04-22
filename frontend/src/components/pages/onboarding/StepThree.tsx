@@ -30,7 +30,7 @@ export default function StepThree({ prev, username }: StepProps) {
     
       const userId = session.data?.user?.id
       
-      await completeOnboarding(userId, cookieHeader, username);
+      await completeOnboarding(userId, username, cookieHeader);
 
       router.push('/dashboard');
     } catch (error) {

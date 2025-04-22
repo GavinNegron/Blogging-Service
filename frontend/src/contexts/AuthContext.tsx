@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import { authClient } from "@/utils/auth-client";
+import { fetchUserBlog } from "@/services/BlogService";
 
 interface User {
   id: string;
@@ -17,6 +18,7 @@ interface Session {
 interface Blog {
   id: string;
   name: string;
+  description?: string;
 }
 
 interface AuthContextType {
@@ -30,17 +32,28 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { data: session } = authClient.useSession();
-  const [user, setUser] = useState<User | null>(null); 
+  const [user, setUser] = useState<User | null>(null);
   const [blog, setBlog] = useState<Blog | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (session?.user) {
-      setUser(session.user); 
-    }
-    setIsLoading(false);
+    const loadData = async () => {
+      if (session?.user) {
+        setUser(session.user);
 
-    setBlog({ id: '1234', name: "Error loading blog" });
+        try {
+          const blogData = await fetchUserBlog(session.user.id);
+          console.log("Fetched blogData:", blogData);
+          setBlog(blogData);
+        } catch (error) {
+          console.error("Failed to fetch blog:", error);
+          setBlog({ id: "1234", name: "Error loading blog" });
+        }
+      }
+      setIsLoading(false);
+    };
+
+    loadData();
   }, [session]);
 
   return (

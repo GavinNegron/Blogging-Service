@@ -4,19 +4,66 @@
     width: 90%
     justify-self: center
 
-    &__banner
-        justify-content: space-between
-        background-color: #4b5cec
-        background: linear-gradient(to right, #3a5fe6, #8051ff)
+    &__nav
+        background: #23252B
+        margin-top: 20px
+        display: flex
+        font-family: var(--font-poppins)
+        font-weight: 400
         border-radius: 3px
-        padding: 15px 18px
-        font-family: var(--font-roboto)
+
+        &__item
+            flex-grow: 1
+            text-align: center
+            cursor: pointer
+
+            a
+                display: block
+                padding: 8px 20px
+                font-weight: 400
+                color: #ffffff
+                text-decoration: none
+                transition: color 0.3s ease, background-color 0.3s ease
+
+                &:not(.selected-page):hover
+                    color: #cccccc
+                    background-color: #222329
+
+                &.selected-page
+                    color: #4b77f5
+                    font-weight: 600
+                    border-bottom: solid 2px #4b77f5
 
     &__content
         margin-top: 20px
+        width: 80%
+        align-self: center
 
         &__group
             flex-direction: row
-            flex-direction: row
             padding: 25px 0
             border-bottom: solid 1px #2b2b2b
+            gap: 50px
+            justify-content: center
+            font-family: var(--font-geist-sans)
+            
+        &__left
+            width: 35%
+            justify-content: center
+            display: flex
+            gap: 5px
+
+        &__right
+            width: 50%
+            justify-content: center
+            display: flex
+            gap: 12px
+
+            &__item
+                display: flex
+                gap: 6px
+                flex-direction: column
+                font-weight: 500
+
+        &__header   
+            font-weight: 600

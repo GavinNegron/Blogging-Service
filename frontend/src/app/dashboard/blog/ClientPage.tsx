@@ -8,6 +8,7 @@ import { usePopup } from '@/contexts/PopupContext';
 import { usePostContext } from '@/contexts/PostContext';
 import DefaultButton from '@/components/ui/buttons/default/DefaultButton';
 import './styles.sass';
+import ViewPlansBanner from '@/components/dashboard/ViewPlans';
 
 const DeletePost = lazy(() => import('@/components/popups/dashboard/DeletePost'));
 const CreatePost = lazy(() => import('@/components/popups/dashboard/CreatePost'));
@@ -64,6 +65,7 @@ export default function BlogClientPage({ posts: initialPosts = [] }: BlogClientP
           </div>
         </div>
         <div className="dashboard__blog-grid no-select">
+        <ViewPlansBanner />
           <div className="dashboard__blog__top">
             <div className="dashboard__blog__search">
               <Search value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />

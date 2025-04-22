@@ -83,7 +83,7 @@ function Sidebar() {
           </div>
           <div className={`sidebar__banner__content ${textVisible ? "visible" : "hidden"}`}>
             <div className="sidebar__banner__name">
-              <span>{blog?.name}</span>
+              <span>{blog?.name || 'error loading profile'}</span>
             </div>
             <div className="sidebar__banner__email">
               <span>{user?.email}</span>

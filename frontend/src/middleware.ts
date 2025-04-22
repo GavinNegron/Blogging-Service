@@ -22,7 +22,7 @@ const getValidSubdomain = (host?: string | null) => {
 const PUBLIC_FILE = /\.(.*)$/
 
 export async function middleware(req: NextRequest) {
-  const cookieHeader = await getCookieHeaderFromServer();
+  const cookieHeader = await getCookieHeaderFromServer()
 
   const session = await api.get('/api/auth/get-session', {
     headers: {
@@ -37,14 +37,14 @@ export async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname
 
   if (
-    user.onboardingComplete &&
+    user?.onboardingComplete &&
     path.startsWith('/dashboard/onboarding')
   ) {
     return NextResponse.redirect(new URL('/dashboard', req.url))
   }
 
   if (
-    !user.onboardingComplete &&
+    !user?.onboardingComplete &&
     path.startsWith('/dashboard') &&
     path !== '/dashboard/onboarding'
   ) {
