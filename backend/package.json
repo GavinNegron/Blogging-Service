@@ -21,7 +21,8 @@
     "helmet": "^8.1.0",
     "morgan": "^1.10.0",
     "passport": "^0.7.0",
-    "postgres": "^3.4.5"
+    "postgres": "^3.4.5",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.8",

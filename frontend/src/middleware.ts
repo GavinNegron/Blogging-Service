@@ -1,84 +1,65 @@
-import { NextResponse } from 'next/server'
-import { NextRequest } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
 import { getSessionCookie } from 'better-auth/cookies'
 import { fetchUserBlog } from '@/services/BlogService'
 import { getCookieHeaderFromServer } from './utils/getCookieHeader'
 import api from './utils/axios.config'
-
-const getValidSubdomain = (host?: string | null) => {
-  let subdomain: string | null = null
-  if (!host && typeof window !== 'undefined') {
-    host = window.location.host
-  }
-  if (host && host.includes('.')) {
-    const candidate = host.split('.')[0]
-    if (candidate && !candidate.includes('localhost')) {
-      subdomain = candidate
-    }
-  }
-  return subdomain
-}
+import { getSubDomain } from './utils/geSubDomain'
 
 const PUBLIC_FILE = /\.(.*)$/
 
 export async function middleware(req: NextRequest) {
+  const { pathname } = req.nextUrl
+  const isPublicAsset = PUBLIC_FILE.test(pathname) || pathname.includes('_next')
+
+  // Skip rewriting for public assets
+  if (isPublicAsset) return
+
+  // Handle subdomain rewrite
+  const host = req.headers.get('host')
+  const subdomain = getSubDomain(host)
+  if (subdomain && !pathname.startsWith('/blogs/')) {
+    const url = req.nextUrl.clone()
+    url.pathname = `/blogs/${subdomain}${pathname}`
+    return NextResponse.rewrite(url)
+  }
+
+  // Session check
   const cookieHeader = await getCookieHeaderFromServer()
-
   const session = await api.get('/api/auth/get-session', {
-    headers: {
-      cookie: cookieHeader,
-    },
-  })
+    headers: { cookie: cookieHeader }
+  }).catch(() => null)
 
-  const userId = session.data?.user?.id
+  const userId = session?.data?.user?.id
 
-  const user = await fetchUserBlog(userId)
-
-  const path = req.nextUrl.pathname
-
-  if (
-    user?.onboardingComplete &&
-    path.startsWith('/dashboard/onboarding')
-  ) {
-    return NextResponse.redirect(new URL('/dashboard', req.url))
-  }
-
-  if (
-    !user?.onboardingComplete &&
-    path.startsWith('/dashboard') &&
-    path !== '/dashboard/onboarding'
-  ) {
-    return NextResponse.redirect(new URL('/dashboard/onboarding', req.url))
-  }
-
-  const url = req.nextUrl.clone()
-  const { pathname } = url
-
-  if (PUBLIC_FILE.test(pathname) || pathname.includes('_next')) {
+  if (!userId) {
+    if (pathname.startsWith('/dashboard')) {
+      return NextResponse.redirect(new URL('/login', req.url))
+    }
     return
   }
 
-  const host = req.headers.get('host')
-  const subdomain = getValidSubdomain(host)
-  if (subdomain) {
-    url.pathname = `/blogs/${subdomain}${url.pathname}`
+  const user = await fetchUserBlog(userId)
+
+  // Redirect to onboarding if user is not complete
+  if ((!user || !user.onboardingComplete) &&
+      pathname.startsWith('/dashboard') &&
+      pathname !== '/dashboard/onboarding') {
+    return NextResponse.redirect(new URL('/dashboard/onboarding', req.url))
   }
 
-  const cookies = getSessionCookie(req)
-
-  if (cookies) {
-    if (pathname === '/login' || pathname === '/register' || pathname === '/') {
-      return NextResponse.redirect(new URL('/dashboard', req.url))
-    }
+  // Redirect away from onboarding if already complete
+  if (user?.onboardingComplete && pathname === '/dashboard/onboarding') {
+    return NextResponse.redirect(new URL('/dashboard', req.url))
   }
 
-  if (!cookies && pathname.startsWith('/dashboard')) {
-    return NextResponse.redirect(new URL('/login', req.url))
+  // Authenticated user visiting auth pages
+  if (getSessionCookie(req) && ['/login', '/register', '/'].includes(pathname)) {
+    return NextResponse.redirect(new URL('/dashboard', req.url))
   }
 
-  return NextResponse.rewrite(url)
+  return
 }
 
 export const config = {
-  matcher: ['/', '/dashboard/:path*', '/login', '/register', '/dashboard/onboarding/:path*'],
+  matcher: ['/:path*']
 }

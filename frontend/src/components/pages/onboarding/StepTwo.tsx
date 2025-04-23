@@ -33,7 +33,6 @@ export default function StepTwo({ next, prev, setUsername }: StepProps) {
           });
           setIsAvailable(res.status === 404); 
         } catch (err) {
-          console.error(err);
           setError("Error checking username availability");
           setIsAvailable(null);
         } finally {

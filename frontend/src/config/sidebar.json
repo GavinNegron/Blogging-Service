@@ -30,11 +30,6 @@
         "text": "Blog Posts"
       },
       {
-        "href": "/dashboard/blog/pages",
-        "icon": "fa-memo",
-        "text": "Pages"
-      },
-      {
         "href": "/dashboard/blog/newsletter",
         "icon": "fa-envelope-circle-check",
         "text": "Newsletter"

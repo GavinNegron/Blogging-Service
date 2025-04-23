@@ -5,6 +5,4 @@ export const app = express.Router()
 
 app.get('/api/user/:id/blog', BlogController.getUserBlog);
 
-app.post('/api/user/:id/blog', BlogController.createUserBlog);
-
 export default app;

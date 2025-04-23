@@ -43,7 +43,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
         try {
           const blogData = await fetchUserBlog(session.user.id);
-          console.log("Fetched blogData:", blogData);
           setBlog(blogData);
         } catch (error) {
           console.error("Failed to fetch blog:", error);

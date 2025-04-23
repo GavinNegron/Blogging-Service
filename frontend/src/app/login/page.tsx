@@ -30,8 +30,8 @@ export default function Page() {
               email,
               password,
               fetchOptions: {
-                onSuccess: () => {
-                    router.push('/dashboard');
+                onSuccess: (msg) => {
+                    console.log(msg.data)
                 },
                 onError: () => {
                     setError("Invalid email or password.");

@@ -5,10 +5,10 @@ import api from '@/utils/axios.config'
 import { getCookieHeaderFromServer } from '@/utils/getCookieHeader'
 
 export const metadata: Metadata = {
-  title: 'Website Overview',
+  title: 'Manage Posts',
 }
 
-export default async function DashboardOverviewPage() {
+export default async function PostsPage() {
   const cookieHeader = await getCookieHeaderFromServer();
   
   const session = await api.get('/api/auth/get-session', {
@@ -22,6 +22,8 @@ export default async function DashboardOverviewPage() {
   if (!userId) {
     return <p>Error: Unauthorized</p>
   }
+
+  const posts = await fetchUserPosts(userId, 5, cookieHeader)
 
   return <ClientPage/>
 }

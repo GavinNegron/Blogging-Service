@@ -58,7 +58,7 @@ export default function BlogClientPage({ posts: initialPosts = [] }: BlogClientP
   
   return (
     <>
-      <div className="d-flex flex-col">
+      <div className="d-flex flex-col dashboard__content__inner">
         <div className="dashboard__banner no-select">
           <div className="dashboard__banner-header">
             <span>Manage Posts</span>

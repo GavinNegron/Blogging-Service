@@ -41,42 +41,6 @@ class BlogController {
       res.status(500).json({ error: "Failed to get user blog details." });
     }
   };
-  
-  
-  createUserBlog = async (req: Request, res: Response): Promise<void> => {
-    let { blogName, description } = req.body || {};
-    const { id: userId } = req.params;
-
-    if (!blogName) {
-      res.status(400).json({ error: "All fields are required."});
-      return;
-    }
-
-    try {
-       const userExists = await db.select().from(user).where(eq(user.id, userId)).execute();
-
-       if (!userExists || userExists.length === 0) {
-        res.status(404).json({ error: "User not found." });
-        return;
-       }
-
-       if (!description) description = "No description provided for this blog.";
-
-       const newBlog = await db.insert(blog).values({
-        id: userId,
-        userId: userId,
-        blogName: blogName,
-        description: description,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-       }).returning();  
-
-       res.status(201).json({ message: "Blog created successfully.", data: newBlog });
-
-    } catch (error) {
-        res.status(500).json({ error: "Failed to create user blog." });
-    }
-  };
 }
 
 export default new BlogController();

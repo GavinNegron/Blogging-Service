@@ -15,10 +15,9 @@ export default function BlogSettingsClientPage() {
 
   useEffect(() => {
     const updateActivePage = () => {
-      const hash = window.location.hash || '#general'; // Default to #general if no url fragment is given
+      const hash = window.location.hash || '#general';
       setActivePage(hash);
   
-      // Update the fragment
       if (!window.location.hash || window.location.hash !== hash) {
         window.location.hash = hash;
       }
@@ -32,15 +31,13 @@ export default function BlogSettingsClientPage() {
 
   return (
     <>
-      <div className="dashboard__banner no-select">
-        <div className="dashboard__banner-header">
-          <span>Blog Settings</span>
+      <div className={`${styles.settings} flex-col dashboard__content__inner`}>
+        <div className="dashboard__banner no-select">
+          <div className="dashboard__banner-header">
+            <span>Blog Settings</span>
+          </div>
         </div>
-      </div>
-
-      <div className={`${styles.settings} flex-col`}>
         <ViewPlansBanner />
-
         <nav className={`${styles['settings__nav']} d-flex`}>
           <div className={`${styles['settings__nav__item']} no-select`}>
             <a href="#general" className={activePage === '#general' ? styles['selected-page'] : ''} draggable="false">General</a>
@@ -58,7 +55,6 @@ export default function BlogSettingsClientPage() {
             <a href="#media" className={activePage === '#media' ? styles['selected-page'] : ''} draggable="false">Media</a>
           </div>
         </nav>
-
         <div className={styles['settings__content']}>
           {activePage === '#appearance' && <AppearanceSettings />}
           {activePage === '#seo' && <SEOSettings />}

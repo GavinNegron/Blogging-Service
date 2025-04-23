@@ -1,8 +1,8 @@
-import { betterAuth } from 'better-auth';
-import { drizzleAdapter } from 'better-auth/adapters/drizzle';
-import { db } from './db'; 
-import { schema } from './schema';
-import { emailOTP } from 'better-auth/plugins';
+import { betterAuth } from 'better-auth'
+import { drizzleAdapter } from 'better-auth/adapters/drizzle'
+import { db } from './db'
+import { schema } from './schema'
+import { emailOTP } from 'better-auth/plugins'
 
 export const auth = betterAuth({
   emailAndPassword: { enabled: true },
@@ -16,8 +16,8 @@ export const auth = betterAuth({
   plugins: [
     emailOTP({
       async sendVerificationOTP({ email, otp, type }) {
-        console.log(`Send OTP ${otp} to ${email} for ${type}`);
+        console.log(`Send OTP ${otp} to ${email} for ${type}`)
       },
     }),
   ],
-});
+})

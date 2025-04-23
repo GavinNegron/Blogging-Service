@@ -6,7 +6,7 @@ export async function completeOnboarding(
   cookieHeader?: string
 ) {
   try {
-    const response = await api.put(
+    const response = await api.post(
       `/api/user/${userId}/onboarding/complete`,
       {
         blogName,

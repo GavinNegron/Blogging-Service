@@ -1,5 +1,8 @@
 const nextConfig = {
-  devIndicators: false,
+  devIndicators: {
+    enabled: false,
+    allowedDevOrigins: ['myblog.local', 'localhost', '.local'],
+  },
 
   images: {
     domains: ['lh3.googleusercontent.com'],

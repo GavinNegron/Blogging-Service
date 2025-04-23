@@ -40,7 +40,6 @@ export default function CreatePost() {
       image
     });
 
-    console.log(response);
   }
 
   return (

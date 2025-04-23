@@ -22,7 +22,6 @@ export async function fetchUserBlog(userId: string, cookieHeader?: string): Prom
       };
     }
 
-    console.warn("Unexpected response format:", response.data);
     return null;
   } catch (error) {
     console.error("Failed to fetch blog details:", error);
