@@ -1,9 +1,9 @@
 import { NextResponse, NextRequest } from 'next/server'
 import { getSessionCookie } from 'better-auth/cookies'
 import { fetchUserBlog } from '@/services/BlogService'
-import { getCookieHeaderFromServer } from './utils/getCookieHeader'
-import api from './utils/axios.config'
-import { getSubDomain } from './utils/geSubDomain'
+import { getCookieHeaderFromServer } from './utils/misc/getCookieHeader'
+import api from './utils/api/axios.config'
+import { getSubDomain } from './utils/misc/geSubDomain'
 
 const PUBLIC_FILE = /\.(.*)$/
 

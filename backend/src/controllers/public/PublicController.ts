@@ -10,6 +10,7 @@ class PublicController {
       
       const userBlog = await db
         .select({
+          id: blog.id,
           blogName: blog.blogName,
           description: blog.description,
         })
@@ -23,6 +24,7 @@ class PublicController {
       }
       
       res.status(200).json({
+        id: userBlog[0].id,
         name: userBlog[0].blogName,
         description: userBlog[0].description,
       });

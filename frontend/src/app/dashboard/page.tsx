@@ -1,8 +1,7 @@
 import ClientPage from './ClientPage'
 import { Metadata } from 'next'
-import { fetchUserPosts } from '@/services/PostService'
-import api from '@/utils/axios.config'
-import { getCookieHeaderFromServer } from '@/utils/getCookieHeader'
+import api from '@/utils/api/axios.config'
+import { getCookieHeaderFromServer } from '@/utils/misc/getCookieHeader'
 
 export const metadata: Metadata = {
   title: 'Website Overview',

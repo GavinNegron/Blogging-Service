@@ -4,7 +4,7 @@ import { usePopup } from '@/contexts/PopupContext'
 import { deleteUserPosts } from '@/services/PostService'
 import { usePostContext } from '@/contexts/PostContext'
 import { useAuthContext } from '@/contexts/AuthContext'
-import styles from './DeletePost.module.sass'
+import styles from './styles.module.sass'
 import { useState } from 'react'
 import ErrorBox from '@/components/ui/ErrorBox'
 

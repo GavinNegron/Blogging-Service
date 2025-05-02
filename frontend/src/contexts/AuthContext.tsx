@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { authClient } from "@/utils/auth-client";
+import { authClient } from "@/utils/auth/auth-client";
 import { fetchUserBlog } from "@/services/BlogService";
 
 interface User {

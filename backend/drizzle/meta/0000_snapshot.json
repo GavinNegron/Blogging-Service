@@ -1,5 +1,5 @@
 {
-  "id": "0f04feab-8d4e-4673-8ffb-b7ed60f2c236",
+  "id": "ea9b677a-a60f-4d03-829c-a3082582e7be",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -152,19 +152,6 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "blog_id_user_id_fk": {
-          "name": "blog_id_user_id_fk",
-          "tableFrom": "blog",
-          "tableTo": "user",
-          "columnsFrom": [
-            "id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
         "blog_user_id_user_id_fk": {
           "name": "blog_user_id_user_id_fk",
           "tableFrom": "blog",
@@ -215,7 +202,7 @@
         },
         "elements": {
           "name": "elements",
-          "type": "text",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": true
         },

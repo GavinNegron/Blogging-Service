@@ -1,0 +1,185 @@
+.editor-toolbar
+    z-index: 1000
+    position: relative
+    width: 100%
+    height: 40px
+    background-color: #2b2d31
+    border-bottom: solid 1px #4b4b4b
+    display: flex
+    flex-direction: row
+    justify-content: center
+    overflow: hidden
+
+    &__top
+        height: 50px
+        width: 100%
+        background-color: #009879
+        border-top: solid 1px #fff
+        border-bottom: solid 1px #fff
+        display: flex
+        justify-content: space-between
+        flex-direction: row
+
+    &__bottom
+        width: 100%
+        height: 40px
+        background-color: #2b2d31
+        border-bottom: solid 1px #4b4b4b
+        display: flex
+        flex-direction: row
+        justify-content: center
+        overflow: hidden
+
+    &__column
+        display: flex
+        align-items: center
+        justify-content: center
+        gap: 20px
+
+    &__item
+        a
+            background: none
+            font-weight: bold
+            height: 100%
+            display: flex
+            cursor: pointer
+
+            i
+                font-size: 20px
+
+        i, select
+            cursor: pointer
+            color: white
+
+        
+                
+        select
+            background: #3c3e42
+            color: #fff
+            font-family: "Poppins"
+            outline: none
+            border-radius: 4px
+
+    &__divider
+        width: 1px
+        height: 45%
+        background-color: #8c8c8c
+        border-radius: 10px
+        margin: 0 15px
+        display: flex
+        align-self: center
+
+    &__middle
+        border-left: solid 1px #fff
+        height: 100%
+        padding: 0 12px
+        overflow: hidden
+
+    &__status
+        padding-left: 25px
+        gap: 10px
+        
+        &-text
+            color: white
+            font-family: 'Poppins'
+            font-weight: 700
+
+        
+    &__size
+        gap: 12px
+        
+        input
+            background-color: #3c3e42
+            width: 30px
+            border: solid 1px #525252
+            border-radius: 5px
+            padding: 2px 5px
+            color: #fff
+            outline: none
+            text-align: center
+            cursor: text
+
+        input::-webkit-inner-spin-button,  
+        input::-webkit-outer-spin-button  
+            -webkit-appearance: none 
+            margin: 0
+
+    &__search
+        color: white
+        font-family: 'Poppins'
+        font-weight: 500
+        background-color: #5fab9a
+        padding: 2px 12px
+        border-radius: 15px
+        width: 100%
+        white-space: nowrap
+        overflow: hidden
+        text-overflow: ellipsis
+
+    &__tools
+        border-left: solid 1px #fff
+        height: 100%
+        padding: 0 12px
+        color: white
+
+    &__undoredo
+        border-left: solid 1px #fff
+        height: 100%
+        padding: 0 12px
+        color: white
+        gap: 10px
+
+    &__actions
+        gap: 1rem
+        font-size: 14px
+        border-left: solid 1px #fff
+        padding: 0 12px
+        height: 100%
+
+
+    &__save-btn
+        background: none
+        color: white
+        font-family: 'Poppins'
+        font-weight: 600
+        transition: 0.2s all
+
+        &:hover
+            color: #ffffffb5
+
+    &__preview-btn
+        background: none
+        color: #f9f7a5
+        font-family: 'Poppins'
+        font-weight: 600
+        transition: 0.2s all
+
+        &:hover
+            color: #f9f7a5c4
+
+.editor-close
+    cursor: pointer
+    display: flex
+    align-self: center
+    justify-self: center
+    color: white
+    position: absolute
+    right: 10px
+    top: 78px
+    font-size: 10px
+    background-color: #434343
+    padding: 5px
+    border-radius: 100%
+
+.editor-open
+    cursor: pointer
+    align-self: center
+    justify-self: center
+    color: white
+    position: absolute
+    right: 10px
+    top: 65px
+    font-size: 10px
+    background-color: #434343
+    padding: 5px
+    border-radius: 100%

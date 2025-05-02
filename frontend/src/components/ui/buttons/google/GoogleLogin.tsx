@@ -1,5 +1,5 @@
 import React from 'react';
-import { authClient } from '@/utils/auth-client';
+import { authClient } from '@/utils/auth/auth-client';
 import './styles.sass';
 
 const handleGoogleLogin = async () => {

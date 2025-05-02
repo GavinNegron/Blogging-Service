@@ -3,6 +3,7 @@
 type BlogDetails = {
   name: string
   description: string
+  id: string
 }
 
 export default function ClientPage({ blogDetails }: { blogDetails: BlogDetails }) {
@@ -13,5 +14,15 @@ export default function ClientPage({ blogDetails }: { blogDetails: BlogDetails }
         <p>{blogDetails.description}</p>
       </div>
     </div>
+    // <>
+    //    <iframe
+    //     src={`http://localhost:3000/dashboard/editor/website/render/${blogDetails.id}`}
+    //     width="100%"
+    //     height="100%"
+    //     title="Preview Website"
+    //     sandbox="allow-same-origin allow-scripts"
+    //     style={{ border: 'none', transformOrigin: 'center center' }}
+    //   />
+    // </>
   )
 }

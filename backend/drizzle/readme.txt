@@ -1,0 +1,1 @@
+1: Generate the migration file: npx drizzle-kit generate (Must be within root/backend folder).

@@ -7,7 +7,7 @@ import Image from "next/image"
 import { useAuthContext } from "@/contexts/AuthContext"
 import { usePopup } from "@/contexts/PopupContext"
 
-const DashboardProfile = lazy(() => import("@/components/popups/dashboard/DashboardProfile"))
+const DashboardProfile = lazy(() => import("@/components/popups/dashboard/DashboardProfile/"))
 
 const NavbarDashboard = () => {
   const { togglePopup, popups } = usePopup()

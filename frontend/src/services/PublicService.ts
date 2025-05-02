@@ -1,4 +1,4 @@
-import api from "@/utils/axios.config";
+import api from "@/utils/api/axios.config";
 
 interface Blog {
   id: string;
@@ -12,7 +12,7 @@ export async function fetchBlogDetails(blogId: string): Promise<Blog | null> {
 
     if (response.data && response.data.name && response.data.description) {
       return {
-        id: blogId,
+        id: response.data.id,
         name: response.data.name,
         description: response.data.description,
       };

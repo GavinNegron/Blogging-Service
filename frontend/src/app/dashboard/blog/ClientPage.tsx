@@ -7,11 +7,11 @@ import Search from '@/components/ui/search';
 import { usePopup } from '@/contexts/PopupContext';
 import { usePostContext } from '@/contexts/PostContext';
 import DefaultButton from '@/components/ui/buttons/default/DefaultButton';
-import './styles.sass';
 import ViewPlansBanner from '@/components/dashboard/ViewPlans';
+import './styles.sass';
 
-const DeletePost = lazy(() => import('@/components/popups/dashboard/DeletePost'));
-const CreatePost = lazy(() => import('@/components/popups/dashboard/CreatePost'));
+const DeletePost = lazy(() => import('@/components/popups/dashboard/DeletePost/'));
+const CreatePost = lazy(() => import('@/components/popups/dashboard/CreatePost/'));
 
 interface Post {
   id: string;

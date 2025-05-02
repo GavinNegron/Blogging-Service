@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { usePopup } from '@/contexts/PopupContext'
-import styles from './CreatePost.module.sass'
+import styles from './styles.module.sass'
 import ImageSelector from '@/components/dashboard/ImageSelector'
 import DefaultButton from '@/components/ui/buttons/default/DefaultButton'
 import { createUserPost } from '@/services/PostService'
@@ -39,7 +39,6 @@ export default function CreatePost() {
       title,
       image
     });
-
   }
 
   return (

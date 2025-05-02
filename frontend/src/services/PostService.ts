@@ -1,4 +1,4 @@
-import api from "@/utils/axios.config"
+import api from "@/utils/api/axios.config"
 
 interface PostData {
   title: string

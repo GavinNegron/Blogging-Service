@@ -1,0 +1,21 @@
+[
+    {
+        "type": "div",
+        "styles": {
+            "width": "100%",
+            "justifyContent": "space-between",
+            "color": "#fff",
+            "fontFamily": "Poppins",
+            "backgroundColor": "#1b1b1b",
+            "borderBottom": "solid 1px #3b3b3b",
+            "padding": "0 70px",
+            "position": "sticky",
+            "top": "0",
+            "left": "0",
+            "height": "70px",
+            "display": "flex",
+            "alignItems": "center",
+            "zIndex": "1000"
+        }
+    }
+]

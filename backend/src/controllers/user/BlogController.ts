@@ -20,9 +20,10 @@ class BlogController {
           onboardingComplete: user.onboardingComplete,
           blogName: blog.blogName,
           description: blog.description,
+          id: blog.id
         })
         .from(user)
-        .innerJoin(blog, eq(blog.userId, user.id)) // Added join condition
+        .innerJoin(blog, eq(blog.userId, user.id)) 
         .where(eq(user.id, userId))
         .execute();
   
@@ -32,6 +33,7 @@ class BlogController {
       }
   
       res.status(200).json({
+        id: userBlog[0].id,
         onboardingComplete: userBlog[0].onboardingComplete,
         blogName: userBlog[0].blogName,
         description: userBlog[0].description,

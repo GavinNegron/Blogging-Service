@@ -3,10 +3,10 @@
 import { useEffect, useRef, useCallback } from "react";
 import { usePopup } from "@/contexts/PopupContext";
 import Image from "next/image";
-import styles from "./DashboardProfile.module.sass";
+import styles from "./styles.module.sass";
 import { useAuthContext } from "@/contexts/AuthContext";
 import Link from "next/link";
-import { authClient } from "@/utils/auth-client";
+import { authClient } from "@/utils/auth/auth-client";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 

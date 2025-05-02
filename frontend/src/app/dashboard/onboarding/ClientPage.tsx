@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { StepOne, StepTwo, StepThree } from '../../../components/pages/onboarding/index';
+import { StepOne, StepTwo, StepThree } from '../../../components/dashboard/Onboarding/index';
 import './onboarding.sass';
 
 export default function Onboarding() {

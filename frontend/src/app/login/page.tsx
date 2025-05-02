@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { NavbarAuth } from '@/components/layout/navbar/index';
 import GoogleLoginButton from '@/components/ui/buttons/google/GoogleLogin';
-import { authClient } from '@/utils/auth-client';
+import { authClient } from '@/utils/auth/auth-client';
 import './login.sass';
 import ErrorBox from '@/components/ui/ErrorBox';
 

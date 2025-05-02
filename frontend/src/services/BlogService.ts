@@ -1,4 +1,4 @@
-import api from "@/utils/axios.config";
+import api from "@/utils/api/axios.config";
 
 interface Blog {
   id: string;
@@ -9,13 +9,13 @@ interface Blog {
 
 export async function fetchUserBlog(userId: string, cookieHeader?: string): Promise<Blog | null> {
   try {
-    const response = await api.get(`/api/user/${userId}/blog/`, {
+    const response = await api.get(`/api/user/${userId}/blog`, {
       headers: cookieHeader ? { Cookie: cookieHeader } : undefined,
     });
 
     if (response.data && response.data.blogName && response.data.description) {
       return {
-        id: userId,
+        id: response.data.id,
         name: response.data.blogName,
         description: response.data.description,
         onboardingComplete: response.data.onboardingComplete

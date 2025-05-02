@@ -1,9 +1,10 @@
-const nextConfig = {
-  devIndicators: {
-    enabled: false,
-    allowedDevOrigins: ['myblog.local', 'localhost', '.local'],
-  },
-
+const nextConfig = {  
+  compiler: {
+    removeConsole: {
+      exclude: ['error', 'warn', 'info'],
+    },
+},
+  devIndicators: false,
   images: {
     domains: ['lh3.googleusercontent.com'],
   },

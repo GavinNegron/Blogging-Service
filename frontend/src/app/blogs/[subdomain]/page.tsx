@@ -54,6 +54,7 @@ export default async function PostsPage({ params }: { params: Params }) {
 
   const blog = await fetchBlogDetails(subdomain)
 
+  console.log(blog?.id)
   if (!blog) {
     return <p>404 | Blog does not exist or is private</p>
   }

@@ -1,0 +1,2 @@
+ALTER TABLE blog_post
+ALTER COLUMN elements TYPE JSONB USING elements::JSONB;

@@ -1,0 +1,52 @@
+.editor-sidebar
+  position: relative
+  z-index: 1000
+  height: 100%
+  color: white
+  font-family: 'Poppins'
+  height: 100%
+  background-color: #161618
+
+  &__icons
+      color: red
+      gap: 20px
+      width: 70px
+      padding-top: 40px
+      border-right: solid 1px rgba(45, 45, 45, .9294117647)
+
+      &__item
+          display: flex
+          align-items: center
+          justify-content: center
+
+          &__btn
+              width: 38px
+              height: 38px
+              background: #ff000000
+              border-radius: 100%
+              color: white
+              display: flex
+              align-items: center
+              justify-content: center
+
+              i
+                  font-size: 24px
+                  
+  &__tab
+    height: 100%
+    width: 0
+    overflow: hidden
+    background-color: #161618
+    border-right: solid 1px rgba(45, 45, 45, 0.9294117647)
+    transition: width 0.2s ease 
+    
+    &--active
+        width: 350px
+
+    &__header
+        color: #fff
+        font-family: var(--font-poppins)
+        box-shadow: 0 8px 12px -4px #161618
+        background-color: #25262b
+        height: 52px
+        padding-left: 25px

@@ -4,8 +4,8 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { NavbarAuth } from "@/components/layout/navbar";
 import GoogleLoginButton from "@/components/ui/buttons/google/GoogleLogin";
-import { authClient } from "@/utils/auth-client";
-import { registerSchema } from "@/utils/validation";
+import { authClient } from "@/utils/auth/auth-client";
+import { registerSchema } from "@/utils/validation/validation";
 import "./register.sass";
 
 export default function Register() {

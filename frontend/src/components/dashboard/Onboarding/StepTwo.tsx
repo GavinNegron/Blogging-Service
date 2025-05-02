@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { usernameSchema } from "../../../utils/validation";
+import { usernameSchema } from "../../../utils/validation/validation";
 
 interface StepProps {
   next: () => void;

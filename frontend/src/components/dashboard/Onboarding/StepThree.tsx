@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import api from "@/utils/axios.config";
+import api from "@/utils/api/axios.config";
 import { completeOnboarding } from "@/services/AccountService";
 
 interface StepProps {

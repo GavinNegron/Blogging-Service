@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { NavbarDashboard } from "../../components/layout/navbar/index";
