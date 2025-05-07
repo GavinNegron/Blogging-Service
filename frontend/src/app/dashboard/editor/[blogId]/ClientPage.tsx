@@ -1,110 +1,128 @@
-'use client'
+"use client"
 
-import { useEffect, useRef, useState } from 'react'
-import { useParams } from 'next/navigation'
-import { useEditorContext } from '@/contexts/EditorContext'
-import {
-  handleMouseOver,
-  handleMouseDown,
-  handleZoom,
-  handleDelete,
-  convertHtmlToJson
-} from '@/utils/editor/editorUtilities'
+import { useEffect, useRef, useState, useReducer } from "react"
+import { useParams } from "next/navigation"
+import { useEditorContext } from "@/contexts/EditorContext"
+import { handleMouseOver, handleMouseDown, handleZoom, handleMouseClick, handleElementDropInIframe } from "@/utils/editor/editorUtilities"
+import { fetchBlogContent, saveEditorAction } from "@/services/EditorService"
+import EditorNavbarPrimary from "@/components/dashboard/Editor/Layout/Navbar/EditorNavbarPrimary/page"
+import EditorNavbarMenu from "@/components/dashboard/Editor/Layout/Navbar/EditorNavbarMenu/page"
+import EditorSidebar from "@/components/dashboard/Editor/Layout/Sidebar/EditorSidebar/page"
+import EditorNavbarToolbar from "@/components/dashboard/Editor/Layout/Navbar/EditorNavbarToolbar/page"
+import { editorReducer } from "@/state/editorReducer"
 
-import EditorNavbarPrimary from '@/components/dashboard/Editor/Layout/Navbar/EditorNavbarPrimary/page'
-import EditorNavbarMenu from '@/components/dashboard/Editor/Layout/Navbar/EditorNavbarMenu/page'
-import EditorSidebar from '@/components/dashboard/Editor/Layout/Sidebar/EditorSidebar/page'
-import EditorNavbarToolbar from '@/components/dashboard/Editor/Layout/Navbar/EditorNavbarToolbar/page'
-
-import styles from './styles.module.sass'
-import './globals.sass'
+import styles from "./styles.module.sass"
+import "./globals.sass"
 
 export default function ClientPage() {
   const { blogId } = useParams()
   const { setHoverData, draggedElementRef, startRef, iframeRef } = useEditorContext()
   const iframeContainerRef = useRef<HTMLDivElement>(null)
-  const [selectedItem, setSelectedItem] = useState<HTMLElement>()
+  const [selectedItem, setSelectedItem] = useState<HTMLElement | null>(null)
+  const [contentTree, dispatch] = useReducer(editorReducer, { content: [] })
 
-  // ACTIONS
-  const onMouseOver = (e: MouseEvent) =>
-    handleMouseOver(e, setHoverData, draggedElementRef, iframeRef)
+  const handleKeyDown = async (event: KeyboardEvent) => {
+    if (!selectedItem) return
+    if (selectedItem.classList.contains("SITE-CONTAINER")) return
 
-  const onMouseDown = (e: MouseEvent) => {
-    handleMouseDown(e, iframeRef, draggedElementRef, startRef)
-    setSelectedItem(e.target as HTMLElement)
-  }
-
-  const onKeyDown = (event: KeyboardEvent) => {
-    switch (true) {
-      case event.key === 'Delete' || event.key === 'Backspace':
-        if (selectedItem) {
-          handleDelete(selectedItem)
-        } else {
-          console.log('No item selected to delete.')
-        }
-        break
-  
-      case event.ctrlKey && event.key === 's':
+    switch (event.key) {
+      case "Delete":
+      case "Backspace":
         event.preventDefault()
-        if (iframeRef.current) {
-          console.log(convertHtmlToJson(iframeRef))
-        } else {
-          console.log('iframeRef is not available')
+        selectedItem.remove()
+        const action = {
+          type: "DELETE_ELEMENT",
+          payload: { id: selectedItem.id }
         }
+        try {
+          await saveEditorAction(blogId as string, action)
+          dispatch(action)
+        } catch (error) {
+          console.error("Delete failed:", error)
+        }
+        setSelectedItem(null)
         break
-  
+
       default:
         break
     }
   }
-  
-  
 
+  const onMouseOver = (e: MouseEvent) => handleMouseOver(e, setHoverData, draggedElementRef, iframeRef)
+  const onMouseDown = (e: MouseEvent) => {
+    handleMouseDown(e, iframeRef, draggedElementRef, startRef, blogId as string)
+    setSelectedItem(e.target as HTMLElement)
+  }
+  const onMouseClick = (e: MouseEvent) => {
+    handleMouseClick(e, iframeRef)
+    setSelectedItem(e.target as HTMLElement)
+  }
   const onZoom = (e: WheelEvent) => handleZoom(e, iframeRef)
 
-  // IFRAME AND ZOOM LISTENERS
+  const onDrop = (e: DragEvent) => {
+    const doc = iframeRef.current?.contentDocument || iframeRef.current?.contentWindow?.document
+    if (doc) {
+      handleElementDropInIframe(e, doc, dispatch, blogId as string)
+    }
+  }
+
   useEffect(() => {
     const iframe = iframeRef.current
     if (!iframe) return
 
-    const attachIframeListeners = () => {
+    const attachListeners = () => {
       const doc = iframe.contentWindow?.document
       if (!doc) return
+      
+      doc.body.addEventListener("mouseover", onMouseOver)
+      doc.body.addEventListener("mousedown", onMouseDown)
+      doc.body.addEventListener("click", onMouseClick)
+      doc.addEventListener("wheel", onZoom, { passive: false })
+      doc.addEventListener("keydown", handleKeyDown)
 
-      doc.body.addEventListener('mouseover', onMouseOver)
-      doc.body.addEventListener('mousedown', onMouseDown)
-      doc.addEventListener('wheel', onZoom, { passive: false })
+      doc.addEventListener("dragover", (e) => {
+        e.preventDefault()
+        e.stopPropagation()
+      })
 
-      const style = doc.createElement('style')
-      doc.head.appendChild(style)
+      doc.addEventListener("drop", onDrop)
     }
 
-    iframe.onload = attachIframeListeners
-
-    if (iframe.contentDocument?.readyState === 'complete') {
-      attachIframeListeners()
-    }
+    iframe.onload = attachListeners
+    if (iframe.contentDocument?.readyState === "complete") attachListeners()
 
     return () => {
       const doc = iframe.contentWindow?.document
-      if (!doc) return
-
-      doc.body.removeEventListener('mouseover', onMouseOver)
-      doc.body.removeEventListener('mousedown', onMouseDown)
-      doc.removeEventListener('wheel', onZoom)
+      if (doc) {
+        doc.body.removeEventListener("mouseover", onMouseOver)
+        doc.body.removeEventListener("mousedown", onMouseDown)
+        doc.body.removeEventListener("click", onMouseClick)
+        doc.removeEventListener("wheel", onZoom)
+        doc.removeEventListener("keydown", handleKeyDown)
+        doc.removeEventListener("dragover", (e) => e.preventDefault())
+        doc.removeEventListener("drop", onDrop)
+      }
     }
-  }, [iframeRef])
+  }, [iframeRef, contentTree, blogId])
 
-  // GLOBAL LISTENERS
   useEffect(() => {
-    document.addEventListener('keydown', onKeyDown)
-    document.addEventListener('wheel', onZoom, { passive: false })
+    const doc = document
+    doc.addEventListener("keydown", handleKeyDown)
+    doc.addEventListener("wheel", onZoom, { passive: false })
 
     return () => {
-      document.removeEventListener('keydown', onKeyDown)
-      document.removeEventListener('wheel', onZoom)
+      doc.removeEventListener("keydown", handleKeyDown)
+      doc.removeEventListener("wheel", onZoom)
     }
   }, [selectedItem])
+
+  useEffect(() => {
+    const loadContent = async () => {
+      const content = await fetchBlogContent(blogId as string)
+      dispatch({ type: "INIT_CONTENT", payload: content })
+    }
+    loadContent()
+  }, [blogId])
 
   return (
     <div className={`${styles.dashboard} d-flex flex-col`}>
@@ -125,7 +143,7 @@ export default function ClientPage() {
                     title="Preview Website"
                     ref={iframeRef}
                     sandbox="allow-same-origin allow-scripts"
-                    style={{ border: 'none', transformOrigin: 'center center' }}
+                    style={{ border: "none", transformOrigin: "center center" }}
                   />
                 </div>
               </div>

@@ -1,6 +1,5 @@
 import ClientPage from './ClientPage';
 import { Metadata } from 'next';
-import { fetchUserPosts } from '@/services/PostService';
 import api from '@/utils/api/axios.config';
 import { getCookieHeaderFromServer } from '@/utils/misc/getCookieHeader';
 import { EditorProvider } from '@/contexts/EditorContext';

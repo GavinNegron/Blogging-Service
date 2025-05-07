@@ -1,4 +1,3 @@
-// context/EditorContext.tsx
 'use client';
 
 import { createContext, useContext, useRef, useState, ReactNode } from 'react';

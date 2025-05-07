@@ -10,3 +10,135 @@ body
   position: absolute
   overflow: hidden
   background-color: #1f2125
+
+.element
+  &__wrapper
+    position: relative
+    box-sizing: border-box
+
+    &--active
+      outline: rgb(0, 112, 243) dashed 2px
+      outline-offset: 4px
+      pointer-events: none
+
+      .element__overlay
+        display: block
+
+      &::before,
+      &::after
+        content: 'Button'
+        position: absolute
+        left: -5px
+        font-size: 10px
+        background: #0070f3
+        color: white
+        font-family: var(--font-inter)
+        font-weight: 700
+        padding: 2px 4px
+        z-index: 10
+        pointer-events: none
+        display: none
+
+      &::before
+        top: -22px
+
+      &::after
+        bottom: -20px
+
+    &.clip-top::before
+      display: block
+
+    &.clip-bottom::after
+      display: block
+
+  &__overlay
+    display: none
+    position: absolute
+    top: -4px
+    left: -4px
+    right: -4px
+    bottom: -4px
+    background: rgba(0, 112, 243, 0.2)
+    z-index: 2
+    pointer-events: none
+
+  &-DefaultButton
+    background-color: #0070f3
+    display: flex
+    border-radius: 2px
+    align-items: center
+    justify-content: center
+    font-family: var(--font-poppins)
+    transition: background-color 0.2s ease
+    cursor: pointer
+    color: white
+    border: none
+    padding: 0 16px
+    font-size: 14px
+    font-weight: 500
+    box-sizing: border-box
+    position: relative
+    z-index: 1
+    width: 180px
+    height: 40px
+
+    &:hover
+      background-color: darken(#0070f3, 5%)
+
+  &-DefaultNavbar
+    background: linear-gradient(180deg, #0d1117 0%, #161b22 100%)
+    color: #e0e0e0
+    padding: 1rem 2rem
+    width: 100vw
+    position: relative
+    top: 0
+    left: 0
+    right: 0
+    z-index: 10000
+    font-family: var(--font-inter)
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3)
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease
+
+    &__container
+      max-width: 1200px
+      margin: 0 auto
+      display: flex
+      justify-content: space-between
+      align-items: center
+      gap: 40px
+
+    &__logo
+      font-size: 1.8rem
+      font-weight: 700
+      color: #ffffff
+      transition: color 0.3s ease
+      letter-spacing: 1px
+
+    &__toggle
+      display: none
+      font-size: 1.8rem
+      background: none
+      border: none
+      color: #e0e0e0
+      cursor: pointer
+      transition: color 0.3s ease
+
+    &__links
+      display: flex
+      list-style: none
+      gap: 2rem
+      align-items: center
+
+      li
+        a
+          color: #e0e0e0
+          text-decoration: none
+          position: relative
+          padding-bottom: 5px
+          transition: color 0.3s ease, padding-bottom 0.3s ease
+
+          &:hover
+            padding-bottom: 10px
+
+  &__overlay
+    display: none

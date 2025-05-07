@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './styles.module.sass';
-import { AddElementTab, InfoTab, PagesTab, SiteSettingsTab } from './tabs/index'
+import { AddElementTab, AddSectionTab, InfoTab, PagesTab, SiteSettingsTab } from './tabs/index'
 
 function EditorSidebarViewport() {
   const [activeTab, setActiveTab] = useState<string | null>('AddElementTab');
@@ -12,6 +12,11 @@ function EditorSidebarViewport() {
           <div className={styles["editor-sidebar__icons__item"]}>
             <button className={`${styles["editor-sidebar__icons__item__btn"]} d-flex`} onClick={() => setActiveTab('AddElementTab')}>
               <i className="fa-solid fa-plus"></i>
+            </button>
+          </div>
+          <div className={styles["editor-sidebar__icons__item"]}>
+            <button className={`${styles["editor-sidebar__icons__item__btn"]} d-flex`} onClick={() => setActiveTab('AddSectionTab')}>
+              <i className="fa-solid fa-grid-2"></i>
             </button>
           </div>
           <div className={styles["editor-sidebar__icons__item"]}>
@@ -32,6 +37,7 @@ function EditorSidebarViewport() {
         </span>
         <span className={`${styles["editor-sidebar__tab"]} d-flex flex-col no-select ${activeTab ? styles["editor-sidebar__tab--active"] : ""}`}>
           {activeTab === "AddElementTab" && <AddElementTab/>}
+          {activeTab === "AddSectionTab" && <AddSectionTab/>}
           {activeTab === "InfoTab" && <InfoTab/>}
           {activeTab === "PagesTab" && <PagesTab/>}
           {activeTab === "SiteSettingsTab" && <SiteSettingsTab/>}

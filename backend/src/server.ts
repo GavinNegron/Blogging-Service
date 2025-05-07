@@ -14,6 +14,8 @@ import { auth } from "./config/auth";
 const app: Application = express();
 const port = process.env.PORT || 8080;
 
+app.use(express.json());
+
 app.use(cookieParser());
 app.use(morgan('combined'));
 app.use(cors({
@@ -25,7 +27,7 @@ app.use(cors({
 app.all("/api/auth/*splat", toNodeHandler(auth));
 
 app.use(rateLimit({
-  windowMs: 60 * 1000,
+  windowMs: 60 * 250,
   max: 50,
   message: 'Too many requests from this IP, please try again later',
 }));
@@ -39,7 +41,6 @@ app.use(helmet.hsts({
   preload: true,
 }));
 
-app.use(express.json());
 app.use(express.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
 
 function loadRoutes(app: Application): void {
