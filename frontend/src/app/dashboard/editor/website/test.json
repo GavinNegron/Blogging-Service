@@ -2459,7 +2459,7 @@ button:disabled,
     .posts article:last-child:after {
         display: none;
     }
-} /* Wrapper */
+} /* wrapper */
 #wrapper {
     display: -moz-flex;
     display: -webkit-flex;

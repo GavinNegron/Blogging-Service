@@ -98,7 +98,7 @@ function AddElementTab() {
                   className={styles['add-element__item']} 
                   tabIndex={0} 
                   draggable='true'
-                  onDragStart={(e) => handleElementDragStart(e, element, iframeRef)}>
+                  onDragStart={(e) => handleElementDragStart(e, element)}>
                   {element.preview}
                 </div>
               ))}

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState, useReducer } from "react"
+import { useEffect, useRef, useState, useReducer, useCallback } from "react"
 import { useParams } from "next/navigation"
 import { useEditorContext } from "@/contexts/EditorContext"
 import { handleMouseOver, handleMouseDown, handleZoom, handleMouseClick, handleElementDropInIframe } from "@/utils/editor/editorUtilities"
@@ -20,8 +20,53 @@ export default function ClientPage() {
   const iframeContainerRef = useRef<HTMLDivElement>(null)
   const [selectedItem, setSelectedItem] = useState<HTMLElement | null>(null)
   const [contentTree, dispatch] = useReducer(editorReducer, { content: [] })
+  const pendingActionsRef = useRef<any[]>([])
+  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  const addPendingAction = useCallback((action: any) => {
+    pendingActionsRef.current.push(action)
+    
+    if (pendingActionsRef.current.length === 1) {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current)
+      }
+      saveTimeoutRef.current = setTimeout(() => {
+        savePendingActions()
+      }, 10000)
+    }
+  }, [])
+
+  const savePendingActions = useCallback(async () => {
+    if (pendingActionsRef.current.length === 0 || !blogId) return
+    
+    const actionsToSave = [...pendingActionsRef.current]
+    pendingActionsRef.current = []
+    
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current)
+      saveTimeoutRef.current = null
+    }
+    
+    try {
+      await saveEditorAction(blogId as string, actionsToSave)
+      console.log(`Batch saved ${actionsToSave.length} actions`)
+    } catch (error) {
+      console.error("Batch save failed:", error)
+      pendingActionsRef.current = [...actionsToSave, ...pendingActionsRef.current]
+      
+      saveTimeoutRef.current = setTimeout(() => {
+        savePendingActions()
+      }, 5000)
+    }
+  }, [blogId])
 
   const handleKeyDown = async (event: KeyboardEvent) => {
+    if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+      event.preventDefault()
+      await savePendingActions()
+      return
+    }
+    
     if (!selectedItem) return
     if (selectedItem.classList.contains("SITE-CONTAINER")) return
 
@@ -34,12 +79,9 @@ export default function ClientPage() {
           type: "DELETE_ELEMENT",
           payload: { id: selectedItem.id }
         }
-        try {
-          await saveEditorAction(blogId as string, action)
-          dispatch(action)
-        } catch (error) {
-          console.error("Delete failed:", error)
-        }
+        
+        addPendingAction(action)
+        dispatch(action)
         setSelectedItem(null)
         break
 
@@ -49,22 +91,37 @@ export default function ClientPage() {
   }
 
   const onMouseOver = (e: MouseEvent) => handleMouseOver(e, setHoverData, draggedElementRef, iframeRef)
+  
   const onMouseDown = (e: MouseEvent) => {
-    handleMouseDown(e, iframeRef, draggedElementRef, startRef, blogId as string)
+    handleMouseDown(e, iframeRef, draggedElementRef, startRef, blogId as string, addPendingAction)
     setSelectedItem(e.target as HTMLElement)
   }
+  
   const onMouseClick = (e: MouseEvent) => {
     handleMouseClick(e, iframeRef)
     setSelectedItem(e.target as HTMLElement)
   }
+  
   const onZoom = (e: WheelEvent) => handleZoom(e, iframeRef)
 
   const onDrop = (e: DragEvent) => {
     const doc = iframeRef.current?.contentDocument || iframeRef.current?.contentWindow?.document
     if (doc) {
-      handleElementDropInIframe(e, doc, dispatch, blogId as string)
+      handleElementDropInIframe(e, doc, dispatch, blogId as string, addPendingAction)
     }
   }
+
+  useEffect(() => {
+    return () => {
+      if (pendingActionsRef.current.length > 0) {
+        savePendingActions()
+      }
+      
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current)
+      }
+    }
+  }, [savePendingActions])
 
   useEffect(() => {
     const iframe = iframeRef.current
@@ -103,7 +160,7 @@ export default function ClientPage() {
         doc.removeEventListener("drop", onDrop)
       }
     }
-  }, [iframeRef, contentTree, blogId])
+  }, [iframeRef, contentTree, blogId, addPendingAction])
 
   useEffect(() => {
     const doc = document
@@ -114,7 +171,7 @@ export default function ClientPage() {
       doc.removeEventListener("keydown", handleKeyDown)
       doc.removeEventListener("wheel", onZoom)
     }
-  }, [selectedItem])
+  }, [selectedItem, handleKeyDown])
 
   useEffect(() => {
     const loadContent = async () => {

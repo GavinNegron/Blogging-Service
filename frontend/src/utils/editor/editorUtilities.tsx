@@ -1,5 +1,4 @@
 import { createRoot } from 'react-dom/client'
-import { saveEditorAction } from '@/services/EditorService'
 
 const componentLoader: Record<string, () => Promise<any>> = {
   button: () => import('@/components/dashboard/Editor/elements/DefaultButton'),
@@ -15,23 +14,47 @@ export const handleMouseOver = (
   iframeRef: React.RefObject<HTMLIFrameElement | null>
 ) => {
   const target = e.target as HTMLElement
-  const iframeDoc = iframeRef.current?.contentDocument || iframeRef.current?.contentWindow?.document
-  if (!target || !iframeDoc) return
+  const iframe = iframeRef.current
+  const iframeDoc = iframe?.contentDocument || iframe?.contentWindow?.document
+  if (!target || !iframeDoc || !iframe) return
 
+  const hoveredElement = target.closest('[id]') as HTMLElement
+  if (!hoveredElement) return
+
+  // Update hover data
   setHoverData({
     type: target.tagName.toLowerCase(),
     className: target.className,
     content: target.textContent || null,
   })
+
+  // Activate wrapper
+  const wrapper = hoveredElement.querySelector('.element__wrapper') as HTMLElement | null
+  const sitewrapper = iframeDoc.querySelector('.SITE-CONTAINER') as HTMLElement | null
+  const scale = parseFloat(sitewrapper?.dataset.scale || '1')
+
+  iframeDoc.querySelectorAll('.element__wrapper').forEach(existing => {
+    if (!hoveredElement || !existing.closest('[id]')?.isSameNode(hoveredElement)) {
+      existing.classList.remove('element__wrapper--active', 'clip-top', 'clip-bottom')
+    }
+  })
+
+  if (wrapper) {
+    wrapper.classList.add('element__wrapper--active')
+    updateTagPosition(wrapper, hoveredElement, iframe, scale)
+  }
+
   e.stopPropagation()
 }
+
 
 export const handleMouseDown = (
   e: MouseEvent,
   iframeRef: React.RefObject<HTMLIFrameElement | null>,
   elementRef: React.RefObject<HTMLElement | null>,
   startRef: React.RefObject<{ x: number; y: number }>,
-  blogId?: string
+  blogId?: string,
+  addPendingAction?: (action: any) => void
 ) => {
   let dragged = false
   const target = e.target as HTMLElement
@@ -41,10 +64,10 @@ export const handleMouseDown = (
 
   const element = target.closest('[id]') as HTMLElement
   if (!element) return
-
   const wrapper = element.querySelector('.element__wrapper') as HTMLElement | null
-  const siteWrapper = iframeDoc.querySelector('.SITE-CONTAINER') as HTMLElement | null
-  const scale = parseFloat(siteWrapper?.dataset.scale || '1')
+
+  const sitewrapper = iframeDoc.querySelector('.SITE-CONTAINER') as HTMLElement | null
+  const scale = parseFloat(sitewrapper?.dataset.scale || '1')
 
   const originalLeft = element.offsetLeft
   const originalTop = element.offsetTop
@@ -66,9 +89,9 @@ export const handleMouseDown = (
     const deltaX = e.clientX - startRef.current.x
     const deltaY = e.clientY - startRef.current.y
 
-    if (!siteWrapper) return
+    if (!sitewrapper) return
 
-    const containerRect = siteWrapper.getBoundingClientRect()
+    const containerRect = sitewrapper.getBoundingClientRect()
 
     const scaledContainerWidth = containerRect.width / scale
     const scaledContainerHeight = containerRect.height / scale
@@ -93,8 +116,8 @@ export const handleMouseDown = (
     const wrapper = element.querySelector('.element__wrapper') as HTMLElement | null
     wrapper?.classList.remove('element__wrapper--active', 'clip-bottom', 'clip-top')
   
-    const siteWrapper = iframeDoc.querySelector('.SITE-CONTAINER') as HTMLElement | null
-    const scale = parseFloat(siteWrapper?.dataset.scale || '1')
+    const sitewrapper = iframeDoc.querySelector('.SITE-CONTAINER') as HTMLElement | null
+    const scale = parseFloat(sitewrapper?.dataset.scale || '1')
   
     if (dragged && blogId) {
       const newX = parseFloat(element.style.left || '0')
@@ -108,10 +131,12 @@ export const handleMouseDown = (
         }
       }
     
-      saveEditorAction(blogId, action)
+      if (addPendingAction) {
+        addPendingAction(action)
+      }
     }
   
-    if (siteWrapper) siteWrapper.dataset.scale = scale.toString()
+    if (sitewrapper) sitewrapper.dataset.scale = scale.toString()
   }
 
   iframeDoc.addEventListener('mousemove', handleMouseMove)
@@ -138,8 +163,8 @@ export const handleMouseClick = (
 
   if (clickedElement) {
     const wrapper = clickedElement.querySelector('.element__wrapper') as HTMLElement | null
-    const siteWrapper = iframeDoc.querySelector('.SITE-CONTAINER') as HTMLElement | null
-    const scale = parseFloat(siteWrapper?.dataset.scale || '1')
+    const sitewrapper = iframeDoc.querySelector('.SITE-CONTAINER') as HTMLElement | null
+    const scale = parseFloat(sitewrapper?.dataset.scale || '1')
     if (wrapper) {
       wrapper.classList.add('element__wrapper--active')
       updateTagPosition(wrapper, clickedElement, iframe, scale)
@@ -183,12 +208,24 @@ const updateTagPosition = (
 export const handleMouseOut = (
   e: MouseEvent,
   setHoverData: (data: { type: string; className: string; content: string | null } | null) => void,
-  elementRef: React.RefObject<HTMLElement | null>
+  elementRef: React.RefObject<HTMLElement | null>,
+  iframeRef: React.RefObject<HTMLIFrameElement | null>
 ) => {
-  if (elementRef.current) return
+  const target = e.target as HTMLElement
+  const iframe = iframeRef.current
+  const iframeDoc = iframe?.contentDocument || iframe?.contentWindow?.document
+  if (!target || !iframeDoc || !iframe) return
+
+  const element = target.closest('[id]') as HTMLElement
+  if (!element) return
+
+  const wrapper = element.querySelector('.element__wrapper') as HTMLElement | null
+  wrapper?.classList.remove('element__wrapper--active', 'clip-top', 'clip-bottom')
+
   setHoverData(null)
   e.stopPropagation()
 }
+
 
 export const handleZoom = (
   e: WheelEvent,
@@ -214,11 +251,11 @@ export const handleZoom = (
   wrapper.dataset.scale = newScale.toString()
 
   setTimeout(() => {
-    iframeDoc?.querySelectorAll('.element__wrapper--active').forEach(activeWrapper => {
-      const activeElement = activeWrapper.closest('[id]') as HTMLElement
+    iframeDoc?.querySelectorAll('.element__wrapper--active').forEach(activewrapper => {
+      const activeElement = activewrapper.closest('[id]') as HTMLElement
       if (activeElement && iframeRef.current) {
         updateTagPosition(
-          activeWrapper as HTMLElement,
+          activewrapper as HTMLElement,
           activeElement,
           iframeRef.current,
           newScale
@@ -235,9 +272,6 @@ export const handleDelete = (element: HTMLElement) => {
 export const handleElementDragStart = (
   e: React.DragEvent<HTMLElement>,
   elementData: any,
-  iframeRef: React.RefObject<HTMLIFrameElement | null>,
-  dispatch?: (action: any) => void,
-  blogId?: string
 ) => {
   e.dataTransfer?.setData('application/x-editor-element', JSON.stringify({
     type: elementData.tag,
@@ -249,7 +283,8 @@ export const handleElementDropInIframe = async (
   e: DragEvent,
   iframeDoc: Document,
   dispatch?: (action: any) => void,
-  blogId?: string
+  blogId?: string,
+  addPendingAction?: (action: any) => void
 ) => {
   e.preventDefault()
   e.stopPropagation()
@@ -287,18 +322,18 @@ export const handleElementDropInIframe = async (
         payload: {
           id,
           elementType: type,
-          content: content || '',
+          content,
           layout: { x, y }
         }
       }
-      await saveEditorAction(blogId, action)
+      
+      if (addPendingAction) {
+        addPendingAction(action)
+      }
+      
       dispatch(action)
     }
   } catch (err) {
     console.error('Drop handling failed:', err)
   }
-}
-
-const generateElementId = (type: any) => {
-  return `${type}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
 }

@@ -1,18 +1,23 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Suspense } from 'react'
 import { useParams } from 'next/navigation'
 import { fetchBlogContent } from '@/services/EditorService'
 import { minifyCSS } from '@/utils/editor/domUtilities'
 import './styles.sass'
 
 interface BlogElement {
-  id: string,
+  id: string
   type: string
   content?: string
   class?: string
   children?: BlogElement[]
   layout?: Record<string, any>
+}
+
+const componentLoader: Record<string, () => Promise<any>> = {
+  button: () => import('@/components/dashboard/Editor/elements/DefaultButton'),
+  nav: () => import('@/components/dashboard/Editor/elements/DefaultNav'),
 }
 
 export default function RenderPage() {
@@ -52,21 +57,28 @@ export default function RenderPage() {
     const layoutRules: string[] = []
 
     const processElement = (element: BlogElement) => {
-      if (element.id && element.layout) {
+      if (
+        element.id &&
+        !element.id.endsWith('-wrapper') &&
+        !element.id.endsWith('-overlay') &&
+        element.layout
+      ) {
         const x = element.layout.x
         const y = element.layout.y
         const rules: string[] = []
-
+    
         if (x != null) rules.push(`left: ${x}px`)
         if (y != null) rules.push(`top: ${y}px`)
         if (rules.length) {
           layoutRules.push(`#${element.id} { position: absolute; ${rules.join('; ')} }`)
         }
       }
-
-      if (element.children) element.children.forEach(processElement)
+    
+      if (element.children) {
+        element.children.forEach(processElement)
+      }
     }
-
+    
     elements.forEach(processElement)
 
     const minifiedLayoutStyles = minifyCSS(layoutRules.join('\n'))
@@ -77,7 +89,7 @@ export default function RenderPage() {
     if (!element) return null
 
     const { type, content, class: className, children, layout = {}, id } = element
-    const voidElements = ['input', 'img', 'br', 'hr', 'meta', 'link']
+    const voidElements = ['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr']
     const childElements: React.ReactNode[] = []
 
     if (content) childElements.push(content)
@@ -91,8 +103,7 @@ export default function RenderPage() {
     }
 
     const props: any = {}
-
-    if (id) props.id = id
+    
     if (className) props.className = className
 
     Object.entries(layout).forEach(([key, value]) => {
@@ -101,12 +112,22 @@ export default function RenderPage() {
       }
     })
 
-    return voidElements.includes(type)
-      ? React.createElement(type, props)
-      : React.createElement(type, props, ...childElements)
+    const Component = React.lazy(componentLoader[type])
+
+    if (voidElements.includes(type)) {
+      return React.createElement(type, { ...props, id })
+    } else {
+      return (
+        <Suspense>
+          <div className="element__wrapper no-select" data-block={type} id={id}>
+            <Component {...props}>{childElements}</Component>
+            <div className="element__overlay"></div>
+          </div>
+        </Suspense>
+      )
+    }
   }
 
-  if (loading) return null
   if (error) return <div className='error-container'>{error}</div>
 
   return (

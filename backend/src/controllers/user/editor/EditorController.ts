@@ -1,15 +1,21 @@
 import { Request, Response } from 'express'
 import { db } from '../../../config/db'
-import { blog, blogMeta } from '../../../config/schema'
+import { blog } from '../../../config/schema'
 import { eq, sql } from 'drizzle-orm'
 
 interface BlogElement {
-  id: string
+  id?: string
   type: string
   layout?: Record<string, any>
+  meta?: Record<string, any>
   class?: string
   content?: string
   children?: BlogElement[]
+}
+
+interface EditorAction {
+  type: string;
+  payload: any;
 }
 
 class EditorController {
@@ -38,70 +44,84 @@ class EditorController {
 
   saveEditorAction = async (req: Request, res: Response): Promise<void> => {
     const { blogId } = req.params
-    const { type, payload } = req.body || {}
+    const { correlationId, actions } = req.body || {}
 
-    if (!blogId || !type || !payload) {
-      res.status(400).json({ error: 'All fields are required' })
+    if (!blogId || !actions || !Array.isArray(actions) || actions.length === 0) {
+      res.status(400).json({ error: 'Valid blogId and actions array are required' })
       return
     }
 
     try {
-      const [currentBlog] = await db.select()
-        .from(blog)
-        .where(eq(blog.id, blogId))
-        .limit(1)
-
-      if (!currentBlog) {
-        res.status(404).json({ error: 'Blog not found' })
-        return
-      }
-
-      const currentContent = currentBlog.content || []
-      let content: BlogElement[] = Array.isArray(currentContent) ? currentContent : []
-
-      switch (type) {
-        case 'ADD_ELEMENT': {
-          const { id, elementType, content: elementContent, layout } = payload
-          content = this.addElement(content, {
-            id,
-            type: elementType,
-            content: elementContent,
-            layout
-          })
-          break
-        }
-        case 'DELETE_ELEMENT': {
-          const idToDelete = payload.id
-          content = this.deleteElement(content, idToDelete)
-          break
-        }
-        case 'DRAG_ELEMENT': {
-          const { id, layout } = payload
-          content = this.updateElementPosition(content, id, layout)
-          break
-        }
-        default:
-          res.status(400).json({ error: 'Unsupported action type' })
+      // Process each action in sequence
+      for (const action of actions) {
+        if (!action.type || !action.payload) {
+          res.status(400).json({ error: 'Each action requires type and payload' })
           return
+        }
+        
+        await this.applyAction(blogId, action)
       }
-
-      await db.update(blog)
-        .set({
-          content,
-          updatedAt: sql`CURRENT_TIMESTAMP`
-        })
-        .where(eq(blog.id, blogId))
-
+      
       res.status(200).json({
         success: true,
+        correlationId
       })
     } catch (error) {
-      console.error('[ERROR_SAVING_ACTION]', error)
+      console.error('[ERROR_SAVING_BATCH_ACTIONS]', error)
       res.status(500).json({
         success: false,
-        error: 'Internal server error'
+        error: 'Internal server error',
+        correlationId
       })
     }
+  }
+  
+  private async applyAction(blogId: string, action: EditorAction): Promise<void> {
+    const { type, payload } = action
+    
+    const [currentBlog] = await db.select()
+      .from(blog)
+      .where(eq(blog.id, blogId))
+      .limit(1)
+
+    if (!currentBlog) {
+      throw new Error('Blog not found')
+    }
+
+    const currentContent = currentBlog.content || []
+    let content: BlogElement[] = Array.isArray(currentContent) ? currentContent : []
+
+    switch (type) {
+      case 'ADD_ELEMENT': {
+        const { id, elementType, content: elementContent, layout } = payload
+        content = this.addElement(content, {
+          id,
+          type: elementType,
+          content: elementContent,
+          layout
+        })
+        break
+      }
+      case 'DELETE_ELEMENT': {
+        const idToDelete = payload.id
+        content = this.deleteElement(content, idToDelete)
+        break
+      }
+      case 'DRAG_ELEMENT': {
+        const { id, layout } = payload
+        content = this.updateElementPosition(content, id, layout)
+        break
+      }
+      default:
+        throw new Error('Unsupported action type')
+    }
+
+    await db.update(blog)
+      .set({
+        content,
+        updatedAt: sql`CURRENT_TIMESTAMP`
+      })
+      .where(eq(blog.id, blogId))
   }
 
   private updateElementPosition(elements: BlogElement[], id: string, layout: { x: number, y: number }): BlogElement[] {
@@ -125,54 +145,37 @@ class EditorController {
 
   private addElement(
     elements: BlogElement[],
-    newElement: {
+    elementData: {
       id: string,
       type: string,
-      content: string,
-      layout: { x: number, y: number }
+      content?: string,
+      layout: { x: number, y: number },
+      class?: string,
+      children?: BlogElement[],
+      [key: string]: any
     }
   ): BlogElement[] {
+    const { id, type, content, layout, children, ...rest } = elementData;
+
     const mainElement: BlogElement = {
-      id: '',
-      type: newElement.type,
-      class: `element-${this.getComponentClassName(newElement.type)}`,
-      content: newElement.content
-    }
-  
-    const overlayDiv: BlogElement = {
-      id: '',
-      type: 'div',
-      class: 'element__overlay'
-    }
-  
-    const wrapperDiv: BlogElement = {
-      id: '',
-      type: 'div',
+      id,
+      type,
+      content,
+      children,
       layout: {
-        'data-block': this.getComponentClassName(newElement.type)
-      },
-      class: 'element__wrapper no-select',
-      children: [mainElement, overlayDiv]
-    }
-  
-    const layoutedWrapper: BlogElement = {
-      id: newElement.id,
-      type: 'div',
-      layout: {
+        x: layout.x,
+        y: layout.y,
         width: null,
         height: null,
-        x: newElement.layout.x,
-        y: newElement.layout.y,
         scale: null,
         rotation: null
       },
-      class: '',
-      children: [wrapperDiv]
-    }
-  
-    return [...elements, layoutedWrapper]
+      ...rest
+    };
+
+    return [...elements, mainElement];
   }
-  
+
   private getComponentClassName(type: string): string {
     const classMap: Record<string, string> = {
         'button': 'DefaultButton',
