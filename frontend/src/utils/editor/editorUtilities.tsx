@@ -10,7 +10,6 @@ const generateId = (type: string) => `${type}-${Math.random().toString(36).slice
 export const handleMouseOver = (
   e: MouseEvent,
   setHoverData: (data: { type: string; className: string; content: string | null } | null) => void,
-  elementRef: React.RefObject<HTMLElement | null>,
   iframeRef: React.RefObject<HTMLIFrameElement | null>
 ) => {
   const target = e.target as HTMLElement
@@ -21,14 +20,12 @@ export const handleMouseOver = (
   const hoveredElement = target.closest('[id]') as HTMLElement
   if (!hoveredElement) return
 
-  // Update hover data
   setHoverData({
     type: target.tagName.toLowerCase(),
     className: target.className,
     content: target.textContent || null,
   })
 
-  // Activate wrapper
   const wrapper = hoveredElement.querySelector('.element__wrapper') as HTMLElement | null
   const sitewrapper = iframeDoc.querySelector('.SITE-CONTAINER') as HTMLElement | null
   const scale = parseFloat(sitewrapper?.dataset.scale || '1')
@@ -46,7 +43,6 @@ export const handleMouseOver = (
 
   e.stopPropagation()
 }
-
 
 export const handleMouseDown = (
   e: MouseEvent,
@@ -189,10 +185,8 @@ const updateTagPosition = (
 
   const containerRect = siteContainer.getBoundingClientRect()
   const containerTop = containerRect.top - iframeRect.top
-  const containerHeight = containerRect.height * scale
 
   const elementTop = elementRect.top - iframeRect.top - containerTop
-  const elementBottom = elementRect.bottom - iframeRect.top - containerTop
 
   const threshold = 40
 
@@ -208,7 +202,6 @@ const updateTagPosition = (
 export const handleMouseOut = (
   e: MouseEvent,
   setHoverData: (data: { type: string; className: string; content: string | null } | null) => void,
-  elementRef: React.RefObject<HTMLElement | null>,
   iframeRef: React.RefObject<HTMLIFrameElement | null>
 ) => {
   const target = e.target as HTMLElement

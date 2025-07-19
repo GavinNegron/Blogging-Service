@@ -18,9 +18,7 @@ export default async function DashboardOverviewPage() {
 
   const userId = session.data?.user?.id
 
-  if (!userId) {
-    return <p>Error: Unauthorized</p>
-  }
+  
 
   return <ClientPage/>
 }

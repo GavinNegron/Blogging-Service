@@ -19,9 +19,7 @@ export default async function PostsPage() {
 
   const userId = session.data?.user?.id
 
-  if (!userId) {
-    return <p>Error: Unauthorized</p>
-  }
+  
 
   await fetchUserPosts(userId, 5, cookieHeader)
 

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useReducer, useCallback } from "react"
 import { useParams } from "next/navigation"
 import { useEditorContext } from "@/contexts/EditorContext"
-import { handleMouseOver, handleMouseDown, handleZoom, handleMouseClick, handleElementDropInIframe } from "@/utils/editor/editorUtilities"
+import { handleMouseOver, handleMouseDown, handleZoom, handleMouseClick, handleElementDropInIframe, handleMouseOut } from "@/utils/editor/editorUtilities"
 import { fetchBlogContent, saveEditorAction } from "@/services/EditorService"
 import EditorNavbarPrimary from "@/components/dashboard/Editor/Layout/Navbar/EditorNavbarPrimary/page"
 import EditorNavbarMenu from "@/components/dashboard/Editor/Layout/Navbar/EditorNavbarMenu/page"
@@ -90,10 +90,15 @@ export default function ClientPage() {
     }
   }
 
-  const onMouseOver = (e: MouseEvent) => handleMouseOver(e, setHoverData, draggedElementRef, iframeRef)
+  const onMouseOver = (e: MouseEvent) => handleMouseOver(e, setHoverData, iframeRef)
   
   const onMouseDown = (e: MouseEvent) => {
     handleMouseDown(e, iframeRef, draggedElementRef, startRef, blogId as string, addPendingAction)
+    setSelectedItem(e.target as HTMLElement)
+  }
+
+  const onMouseOut = (e: MouseEvent) => {
+    handleMouseOut(e, setHoverData, iframeRef)
     setSelectedItem(e.target as HTMLElement)
   }
   
@@ -132,6 +137,7 @@ export default function ClientPage() {
       if (!doc) return
       
       doc.body.addEventListener("mouseover", onMouseOver)
+      doc.body.addEventListener("mouseout", onMouseOut)
       doc.body.addEventListener("mousedown", onMouseDown)
       doc.body.addEventListener("click", onMouseClick)
       doc.addEventListener("wheel", onZoom, { passive: false })
